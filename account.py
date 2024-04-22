@@ -13,7 +13,7 @@ def app():
 
     if st.button('Login'):
         # Validate login credentials (you can replace this with your actual validation logic)
-        if email == 'test@mas.com' and password == 'password':
+        if email == st.secrets["EMAIL"] and password == st.secrets["PASSKEY"]:
             st.session_state.useremail = email
             st.success('Successfully Logged In!')
         else:
