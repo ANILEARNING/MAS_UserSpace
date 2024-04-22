@@ -1,0 +1,35 @@
+Q. How to access masterclass module?
+A. You can access the masterclass modules by logging into madaboutsports.in website and then go to my dashboard where you can view all the courses you're enrolled in.
+
+Q. When will the live classes be conducted?
+A. Live classes occur every tuesday 9 pm.
+
+Q. What if i miss the live sessions?
+A. Every live session will be recorded, you can view the recording via telegram channel or within the modules there's a seperate section called Tuesday live session recordings
+
+Q. Where do i get the masterclass bonuses?
+A. You can find them on the github page.
+
+Q. Where do i find the datasets related to wagon wheel?
+A. You can find all the datasets in github page and also go to annoucements channel and then files.
+
+Q. Where do i find the projects related to masterclass?
+A. You can find the projects in the announcement channel under the files folder.
+
+Q. Where can i find the schedule related to masterclass?
+A. You can find the schedule in github page under the section masterclass links.
+
+Q. When can i apply for the internship?
+A. Masterclass internship occurs every two months. You can apply for this whenever the form is shared in the announcement channel.
+
+Q. How do i apply for the internship?
+A. A google form will be shared in the announcement channel, all you need to do is to apply.
+
+Q. Can i do the internship twice?
+A. No, the purpose of internship is provide real world working expereince, and we cant to provide this opportunity for everyone in the masterclass.
+
+Q. When can i get my masterclass certificate?
+A. You need to complete watching all the modules related to masterclass and also finish 8 assignments.
+
+Q. I have not completed my masterclass, can i still apply for the internships?
+A. Yes you can, there's no completion criteria or cutoff to apply for the internship, anybody can apply
