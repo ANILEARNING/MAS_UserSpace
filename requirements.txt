@@ -6,4 +6,4 @@ certifi
 streamlit
 scikit-learn
 streamlit_option_menu
-pysqlite3-binary
+sqlite>=3.35.0
