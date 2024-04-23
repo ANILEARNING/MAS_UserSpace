@@ -7,3 +7,4 @@ streamlit
 scikit-learn
 streamlit_option_menu
 pysqlite3-binary
+nltk
