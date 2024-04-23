@@ -3,7 +3,7 @@ from streamlit_option_menu import option_menu
 import about
 import account
 import home
-# import chatbot
+import chatbot
 import resumeAnalyzer
 
 st.set_page_config(
@@ -48,7 +48,7 @@ class MultiApp:
             home.app()
         elif app == "Chat Assistant":
             if st.session_state.useremail:
-                resumeAnalyzer.main()
+                chatbot.main()
             else:
                 st.info("Please log in to access the Chat Assistant.")
         elif app == "Resume Analyzer":
