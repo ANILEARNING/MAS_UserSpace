@@ -459,25 +459,38 @@ def main():
                 comparing_file = st.file_uploader("**Upload the CV you want to compare (PDF)**", type="pdf")
                 if comparing_file is not None:
                     jd_input = extract_text_from_pdf(comparing_file)
-                    analyze_button_pdf = st.button("""Analyze""",
-                                                  key="analyze_button_pdf", 
-                                                  help="Click to analyze the PDF"
-                                                  )
-                    if analyze_button_pdf:
-                    # if st.button("Analyze PDF", key="analyze_button_pdf"):
-                        with st.spinner('Loading...' + f"{get_random_quote()}"):
-                            data = generate_json_data(user_pdf_text, jd_input)
-                            display_json_data(data)
+                    # analyze_button_pdf = st.button("""Analyze""",
+                    #                               key="analyze_button_pdf", 
+                    #                               help="Click to analyze the PDF"
+                    #                               )
+                    # if analyze_button_pdf:
+                    # # if st.button("Analyze PDF", key="analyze_button_pdf"):
+                    #     with st.spinner('Loading...' + f"{get_random_quote()}"):
+                    #         data = generate_json_data(user_pdf_text, jd_input)
+                    #         display_json_data(data)
 
           analyze_button_text = st.button("Analyze""",
                                                   key="analyze_button_text", 
-                                                  help="Click to analyze the Text"                                               
+                                                  help="Click to analyze your Resume"                                               
                                                   )
+          # if analyze_button_text:
+          #           # with st.spinner('Analyzing job description...'):
+          #           with st.spinner("Loading..." + f"**{get_random_quote()}**"):
+          #               data = generate_json_data(user_pdf_text, jd_input)
+          #           display_json_data(data)
           if analyze_button_text:
-                    # with st.spinner('Analyzing job description...'):
-                    with st.spinner("Loading..." + f"**{get_random_quote()}**"):
-                        data = generate_json_data(user_pdf_text, jd_input)
-                    display_json_data(data)
+                    if input_method == "Text":
+                        with st.spinner("Loading..." + f"**{get_random_quote()}**"):
+                            data = generate_json_data(user_pdf_text, jd_input)
+                        display_json_data(data)
+                    elif input_method == "PDF":
+                        with st.spinner("Loading..." + f"**{get_random_quote()}**"):
+                          data = generate_json_data(user_pdf_text, jd_input)
+                        display_json_data(data)
+                    else:
+                        with st.spinner("Loading..." + f"**{get_random_quote()}**"):
+                          data = generate_json_data(user_pdf_text, jd_input)
+                        display_json_data(data)
     # else:
     #   st.title("Please enter email and password to access the content")
 
