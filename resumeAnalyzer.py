@@ -220,6 +220,49 @@ def calculate_similarity(user_resume_text, job_description):
     similarity_score = cosine_sim[0][1] * 100
     return similarity_score
 
+def extract_score(score_str):
+    # Regular expression to match numbers
+    number_pattern = r'\d+'
+
+    # Regular expression to match percentage format
+    percentage_pattern = r'(\d+)%'
+
+    # Regular expression to match "out of" format
+    out_of_pattern = r'(\d+) out of (\d+)'
+
+    # Regular expression to match number followed by percentage format
+    number_percentage_pattern = r'(\d+)%'
+
+    # Regular expression to match percentage followed by "out of" format
+    percentage_out_of_pattern = r'(\d+)% out of (\d+)'
+
+    # Regular expression to match number followed by percentage followed by "out of" format
+    number_percentage_out_of_pattern = r'(\d+)% out of (\d+)'
+
+    # Try to match each pattern to the input string
+    match_number = re.match(number_pattern, score_str)
+    match_percentage = re.match(percentage_pattern, score_str)
+    match_out_of = re.match(out_of_pattern, score_str)
+    match_number_percentage = re.match(number_percentage_pattern, score_str)
+    match_percentage_out_of = re.match(percentage_out_of_pattern, score_str)
+    match_number_percentage_out_of = re.match(number_percentage_out_of_pattern, score_str)
+
+    # Extract the score based on the matched pattern
+    if match_number:
+        return int(match_number.group(0))
+    elif match_percentage:
+        return int(match_percentage.group(1))
+    elif match_out_of:
+        return int(match_out_of.group(1))
+    elif match_number_percentage:
+        return int(match_number_percentage.group(1))
+    elif match_percentage_out_of:
+        return int(match_percentage_out_of.group(1))
+    elif match_number_percentage_out_of:
+        return int(match_number_percentage_out_of.group(1))
+    else:
+        return None  # If no match is found, return None
+
 def extract_phone_numbers(text):
     phone_numbers = re.findall(r'[\+\(]?[1-9][0-9 .\-\(\)]{8,}[0-9]', text)
     return phone_numbers
@@ -421,9 +464,15 @@ def generate_json_data(user_pdf_text, job_requirement_text):
     response_json = response_json.replace('json', '', 1)
     response_json = response_json.replace('JSON', '', 1)
     data = json.loads(response_json)
+    # if data['score'] is None or int(data['score'])<=30 :
+    #     data['score'] = calculate_similarity(user_pdf_text, job_requirement_text)
+    # if data['score']<=40:
+    #     data['score'] = random.randint(50, 60)
+    if isinstance(data['score'], str):
+      data['score'] = extract_score(data['score'])
     if data['score'] is None or int(data['score'])<=30 :
         data['score'] = calculate_similarity(user_pdf_text, job_requirement_text)
-    if data['score']<=40:
+    if int(data['score'])<=40:
         data['score'] = random.randint(50, 60)
 
     print(data)
