@@ -9,4 +9,3 @@ streamlit_option_menu
 pysqlite3-binary
 nltk
 plotly
-sqlite3
