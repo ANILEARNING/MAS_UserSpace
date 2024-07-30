@@ -282,7 +282,6 @@ def get_progression_graph(data):
     team2 = str(inning2['batting_team'].unique()[0])
 
     # Innings Scores
-
     team1_short_name = team_mapping[team1]['short']
     team2_short_name = team_mapping[team2]['short']
 
@@ -292,41 +291,31 @@ def get_progression_graph(data):
     team1_final_wickets = inning1['cum_wickets'].iloc[-1]
     team2_final_wickets = inning2['cum_wickets'].iloc[-1]
 
-
     inning1_overs = inning1['ball'].iloc[-1]
     inning2_overs = inning2['ball'].iloc[-1]
 
     inning1_label = f"{team1_short_name}: {team1_final_score}/{team1_final_wickets} in {inning1_overs}"
     inning2_label = f"{team2_short_name}: {team2_final_score}/{team2_final_wickets} in {inning2_overs}"
 
-    # inning1_label, inning2_label -> ('SRH: 113/10 in 18.3', 'KKR: 114/2 in 10.3')
-
     # Winner
-
     if team1_final_score > team2_final_score:
         winner = team1
         win_by = f"{team1_final_score - team2_final_score} Runs"
     elif team1_final_score < team2_final_score:
         winner = team2
-        win_by = f"{team1_final_wickets - team2_final_wickets} Wickets"
+        win_by = f"{10 - team2_final_wickets} Wickets"
     else:
         winner = "Draw"
-
-    # winner, win_by -> ('Kolkata Knight Riders', '8 Wickets')
+        win_by = ""
 
     # Score Info
-
     inning1_score_info = inning1.apply(lambda row: f"{team1_short_name}: {row['cum_runs']}/{row['cum_wickets']} ({round(row['over_ball'], 1)})", axis=1)
-
     inning2_score_info = inning2.apply(lambda row: f"{team2_short_name}: {row['cum_runs']}/{row['cum_wickets']} ({round(row['over_ball'], 1)})", axis=1)
 
-
-    # Add Figure
-
+    # Create Figure
     fig = go.Figure()
 
     # Create Inning1 Progression Line
-
     fig.add_trace(go.Scatter(
         x=inning1['ball_count'],
         y=inning1['cum_runs'],
@@ -337,31 +326,29 @@ def get_progression_graph(data):
     ))
 
     # Plot Inning1 Wickets
-
     for i in range(len(inning1)):
         if inning1['wicket_fallen'].iloc[i] == 1:
-            if inning1['player_dismissed'].iloc[i] == inning1['striker'].iloc[i]:
-                wicket_info = f"""{team1_short_name}: {inning1['cum_runs'].iloc[i]}/{inning1['cum_wickets'].iloc[i]} ({round(inning1['over_ball'].iloc[i],1)})
-                <br>{inning1['player_dismissed'].iloc[i]} {inning1['striker_final_score'].iloc[i]} """
-            else:
-                wicket_info = f"""{team1_short_name}: {inning1['cum_runs'].iloc[i]}/{inning1['cum_wickets'].iloc[i]} ({round(inning1['over_ball'].iloc[i],1)})
-                <br>{inning1['player_dismissed'].iloc[i]} {inning1[inning1['striker'] == inning1['player_dismissed'].iloc[i]].iloc[-1]} """
+            wicket_info = f"""{team1_short_name}: {inning1['cum_runs'].iloc[i]}/{inning1['cum_wickets'].iloc[i]} ({round(inning1['over_ball'].iloc[i],1)})
+            <br>{inning1['player_dismissed'].iloc[i]} {inning1['striker_final_score'].iloc[i]} """
 
             fig.add_trace(
                 go.Scatter(
                     x=[inning1['ball_count'].iloc[i]],
                     y=[inning1['cum_runs'].iloc[i]],
                     mode='markers',
-                    marker=dict(color=team_mapping[team2]['colors'][1], size=10),
+                    marker=dict(
+                        symbol='star',
+                        size=15,
+                        color=team_mapping[team2]['colors'][1],
+                        line=dict(width=2, color='black')
+                    ),
                     text=wicket_info,
                     hoverinfo='text',
-                    name=wicket_info
+                    name=f"Wicket {inning1['cum_wickets'].iloc[i]}"
                 )
             )
 
-
     # Create Inning2 Progression Line
-
     fig.add_trace(go.Scatter(
         x=inning2['ball_count'],
         y=inning2['cum_runs'],
@@ -372,146 +359,70 @@ def get_progression_graph(data):
     ))
 
     # Plot Inning2 Wickets
-
     for i in range(len(inning2)):
         if inning2['wicket_fallen'].iloc[i] == 1:
-            if inning2['player_dismissed'].iloc[i] == inning2['striker'].iloc[i]:
-                wicket_info = f"""{team2_short_name}: {inning2['cum_runs'].iloc[i]}/{inning2['cum_wickets'].iloc[i]} ({round(inning2['over_ball'].iloc[i],1)})
-                <br>{inning2['player_dismissed'].iloc[i]} {inning2['striker_final_score'].iloc[i]} """
-            else:
-                wicket_info = f"""{team2_short_name}: {inning2['cum_runs'].iloc[i]}/{inning2['cum_wickets'].iloc[i]} ({round(inning2['over_ball'].iloc[i],1)})
-                <br>{inning2['player_dismissed'].iloc[i]} {inning2['non_striker_final_score'].iloc[i]} """
+            wicket_info = f"""{team2_short_name}: {inning2['cum_runs'].iloc[i]}/{inning2['cum_wickets'].iloc[i]} ({round(inning2['over_ball'].iloc[i],1)})
+            <br>{inning2['player_dismissed'].iloc[i]} {inning2['striker_final_score'].iloc[i]} """
 
             fig.add_trace(
                 go.Scatter(
                     x=[inning2['ball_count'].iloc[i]],
                     y=[inning2['cum_runs'].iloc[i]],
                     mode='markers',
-                    marker=dict(color=team_mapping[team1]['colors'][1], size=10),
+                    marker=dict(
+                        symbol='star',
+                        size=15,
+                        color=team_mapping[team1]['colors'][1],
+                        line=dict(width=2, color='white')
+                    ),
                     text=wicket_info,
                     hoverinfo='text',
-                    name=wicket_info
+                    name=f"Wicket {inning2['cum_wickets'].iloc[i]}"
                 )
             )
 
+    # Add phase annotations
+    max_score = max(inning2['cum_runs'].iloc[-1], inning1['cum_runs'].iloc[-1])
+    phases = [
+        ("Powerplay", 18, inning1['cum_runs'].iloc[36] if len(inning1) > 36 else None, inning2['cum_runs'].iloc[36] if len(inning2) > 36 else None),
+        ("Middle Overs", 70, inning1['cum_runs'].iloc[90] if len(inning1) > 90 else None, inning2['cum_runs'].iloc[90] if len(inning2) > 90 else None),
+        ("Death Overs", 110, inning1['cum_runs'].iloc[-1], inning2['cum_runs'].iloc[-1])
+    ]
 
-    # Additional
+    for phase, x_pos, score1, score2 in phases:
+        fig.add_annotation(x=x_pos, y=0, text=phase,
+                           showarrow=False, font=dict(color="white", size=12))
+        if score1 is not None and score2 is not None:
+            fig.add_annotation(x=x_pos, y=max_score + 5, 
+                               text=f"{team1_short_name}: {score1}<br>{team2_short_name}: {score2}",
+                               showarrow=False, font=dict(color="white", size=16))
 
-    
-    inning1_powerplay_score = None
-    inning1_middle_overs_score = None
-    inning1_death_overs_score = None
-
-
-
-    # for i in range(len(inning1)):
-    #     current_over = round(inning1.loc[i, 'over_ball'], 1)
-    #     if current_over == 5.6:
-    #         inning1_powerplay_score = f"{team1_short_name}: {inning1.loc[i, 'cum_runs']}/{inning1.loc[i, 'cum_wickets']}"
-
-
-    # for i in range(len(inning1)):
-    #     current_over = round(inning1.loc[i, 'over_ball'], 1)
-    #     if current_over == 14.6:
-    #         inning1_middle_overs_score = f"{team1_short_name}: {inning1.loc[i, 'cum_runs']}/{inning1.loc[i, 'cum_wickets']}"
-
-    powerplay_end = inning1[inning1['over_ball'].round(1) == 5.6]
-    if not powerplay_end.empty:
-        inning1_powerplay_score = f"{team1_short_name}: {powerplay_end['cum_runs'].iloc[0]}/{powerplay_end['cum_wickets'].iloc[0]}"
-    else:
-        inning1_powerplay_score = f"{team1_short_name}: N/A"
-
-    # For middle overs score (end of 15th over)
-    middle_overs_end = inning1[inning1['over_ball'].round(1) == 14.6]
-    if not middle_overs_end.empty:
-        inning1_middle_overs_score = f"{team1_short_name}: {middle_overs_end['cum_runs'].iloc[0]}/{middle_overs_end['cum_wickets'].iloc[0]}"
-    else:
-        inning1_middle_overs_score = f"{team1_short_name}: N/A"
-
-
-    if inning1_middle_overs_score is None and len(inning1) > 0:
-        inning1_middle_overs_score = f"{team1_short_name}: {inning1['cum_runs'].iloc[-1]}/{inning1['cum_wickets'].iloc[-1]}"
-
-    if len(inning1) > 0:
-        inning1_death_overs_score =  f"{team1_short_name}: {inning1['cum_runs'].iloc[-1]}/{inning1['cum_wickets'].iloc[-1]}"
-
-
-
-    i = 0
-
-    # Inning2 Powerplay, Middle Overs, Death Overs Score
-
-    inning2_powerplay_score = None
-    inning2_middle_overs_score = None
-    inning2_death_overs_score = None
-
-    # Use iloc to access rows by position instead of label-based loc
-    for i in range(len(inning2)):
-        current_over = round(inning2.iloc[i]['over_ball'], 1)  # Use iloc to access by position
-        if current_over == 5.6:
-            inning2_powerplay_score = f"{team2_short_name}: {inning2.iloc[i]['cum_runs']}/{inning2.iloc[i]['cum_wickets']}"
-
-    for i in range(len(inning2)):
-        current_over = round(inning2.iloc[i]['over_ball'], 1)  # Use iloc to access by position
-        if current_over == 14.6:
-            inning2_middle_overs_score = f"{team2_short_name}: {inning2.iloc[i]['cum_runs']}/{inning2.iloc[i]['cum_wickets']}"
-
-    if inning2_middle_overs_score is None and len(inning2) > 0:
-        inning2_middle_overs_score = f"{team2_short_name}: {inning2['cum_runs'].iloc[-1]}/{inning2['cum_wickets'].iloc[-1]}"
-
-    if len(inning2) > 0:
-        inning2_death_overs_score =  f"{team2_short_name}: {inning2['cum_runs'].iloc[-1]}/{inning2['cum_wickets'].iloc[-1]}"
-
-
-    # Add powerplay annotation
-    fig.add_annotation(x=18, y=0, text=f"Powerplay",
-                    showarrow=False, font=dict(color="white", size=12))
-
-    fig.add_annotation(x=18, y=125, text=f"{inning1_powerplay_score}<br>{inning2_powerplay_score}",
-                    showarrow=False, font=dict(color="white", size=16))
-
-    # Add middle overs annotation
-    fig.add_annotation(x=70, y=0, text="Middle Overs",
-                    showarrow=False, font=dict(color="white", size=12))
-
-    fig.add_annotation(x=70, y=125, text=f"{inning1_middle_overs_score}<br>{inning2_middle_overs_score}",
-                    showarrow=False, font=dict(color="white", size=16))
-
-
-    # Add death overs annotation
-    fig.add_annotation(x=110, y= 0, text="Death Overs",
-                    showarrow=False, font=dict(color="white", size=12))
-
-    fig.add_annotation(x=110, y=125, text=f"{inning1_death_overs_score}<br>{inning2_death_overs_score}",
-                    showarrow=False, font=dict(color="white", size=16))
-
-
-    # Add layout
+    # Update layout
     fig.update_layout(
         title={
-            'text': f'{team1} vs {team2} : Innings Summary<br>{winner} Won By {win_by}',
-            'x': 0.4,
-            'font': {
-                'size': 24  # Increase title font size
-            }
+            'text': f'<b>{team1} vs {team2}</b><br><b>{winner} Won By {win_by}</b>' if winner != "Draw" else f'<b>{team1} vs {team2}</b><br><b>Match Tied</b>',
+            'x': 0.5,
+            'font': {'size': 24, 'color': 'black'}
         },
         xaxis_title='Balls',
         yaxis_title='Runs',
-        plot_bgcolor='#313131',
-        paper_bgcolor='#393939',
-        font=dict(color="white"),
-        legend=dict(font=dict(color="white"))
+        plot_bgcolor='rgba(255, 255, 255, 0.9)',
+        paper_bgcolor='rgba(255, 255, 255, 0.9)',
+        font=dict(color="black"),
+        legend=dict(font=dict(color="black")),
+        hoverlabel=dict(bgcolor="white", font_size=12, font_family="Rockwell"),
+        height=800
     )
 
+    # Update text color for better visibility
+    fig.update_traces(textfont=dict(color='black'))
 
     return fig
 
-
 def get_top_batters(batter):
-    # Top 4 Batsman
     colors = [team_mapping[team]['colors'][0] for team in batter['batting_team']]
 
-    fig1 = go.Figure(go.Bar(
+    fig = go.Figure(go.Bar(
         x=batter['striker_final_runs'].head(4),
         y=batter['striker'].head(4),
         orientation='h',
@@ -521,24 +432,22 @@ def get_top_batters(batter):
         hoverinfo='text'
     ))
 
-    fig1.update_layout(
-        title=f'Top 4 Batsmen',
+    fig.update_layout(
+        title='Top 4 Batsmen',
         xaxis_title='Final Runs',
         yaxis_title='Batsman',
-        yaxis=dict(autorange='reversed')
+        yaxis=dict(autorange='reversed'),
+        plot_bgcolor='rgba(255, 255, 255, 0.9)',
+        paper_bgcolor='rgba(255, 255, 255, 0.9)',
+        font=dict(color="black")
     )
 
-    return fig1
-
+    return fig
 
 def get_top_bowlers(bowler):
-    
-    # Top 4 Bowler
     colors = [team_mapping[team]['colors'][0] for team in bowler['bowling_team']]
 
-    fig2 = go.Figure()
-
-    fig2.add_trace(go.Bar(
+    fig = go.Figure(go.Bar(
         x=bowler['bowler_final_wickets'].head(4),
         y=bowler['bowler'].head(4),
         orientation='h',
@@ -548,95 +457,132 @@ def get_top_bowlers(bowler):
         hoverinfo='text'
     ))
 
-    fig2.update_layout(
-        title=f'Top 4 Bowlers',
+    fig.update_layout(
+        title='Top 4 Bowlers',
         xaxis_title='Final Wickets',
         yaxis_title='Bowler',
-        yaxis=dict(autorange='reversed')
+        yaxis=dict(autorange='reversed'),
+        plot_bgcolor='#313131',
+        paper_bgcolor='#393939',
+        font=dict(color="white")
     )
 
-    return fig2
-
-
+    return fig
 
 def main():
+    # st.set_page_config(layout="wide")
 
-    st.set_page_config(
-        layout="wide"
+    
+    # st.set_page_config(layout="wide")
+
+    st.markdown(
+        """
+        <style>
+        .main {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+        }
+        .stPlotlyChart {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .match-result {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f77b4;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .stSelectbox > div > div {
+            background-color: rgba(255, 255, 255, 0.7) !important;
+            color: black !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
     )
 
+    st.title("Cricket Match Analyzer")
 
-    all_ipl_data = pd.read_csv('IPL_Data\\raw_ipl_data.csv')
+    # Load data
+    @st.cache_data
+    def load_data():
+        return pd.read_csv('IPL_Data/raw_ipl_data.csv')
 
-    match_ids = list(all_ipl_data.match_id.unique())
+    with st.spinner("Loading IPL data..."):
+        all_ipl_data = load_data()
 
+    # Filters at the top
+    col1, col2 = st.columns(2)
+    with col1:
+        seasons = sorted(all_ipl_data['season'].unique(), reverse=True)
+        selected_season = st.selectbox("Select Season", seasons, key="season_filter")
+
+    filtered_data = all_ipl_data[all_ipl_data['season'] == selected_season]
+    
+    match_ids = list(filtered_data.match_id.unique())
     matches_list = {}
 
     for match_id in match_ids:
-        match = all_ipl_data[all_ipl_data['match_id'] == match_id]
-
-        season = match.iloc[0]['season']
+        match = filtered_data[filtered_data['match_id'] == match_id]
         start_date = match.iloc[0]['start_date']
-
-        # Parse the date string to a datetime object
         date_obj = datetime.strptime(start_date, "%Y-%m-%d")
-
-        # Format the datetime object to the desired format
         formatted_date = date_obj.strftime("%d %b")
-
         batting_team = match.iloc[0]['batting_team']
         bowling_team = match.iloc[0]['bowling_team']
-
         team1 = team_mapping[batting_team]['short']
-
         team2 = team_mapping[bowling_team]['short']
-
-        filter_string = f"{team1} vs {team2} {formatted_date} {season}"
-        
+        filter_string = f"{team1} vs {team2} {formatted_date} {selected_season}"
         matches_list[filter_string] = match_id
 
-
     matches_names = list(matches_list.keys())
-
-    select_match = st.selectbox('Select Match:', matches_names, index=2)
+    with col2:
+        select_match = st.selectbox('Select Match:', matches_names, key="match_filter")
 
     match_id = matches_list[select_match]
+    match_data = filtered_data[filtered_data['match_id'] == match_id]
 
-    match_data = all_ipl_data[all_ipl_data['match_id'] == match_id]
+    # Process data
+    try:
+        with st.spinner("Processing match data..."):
+            data, batter, bowler = feature_extraction(match_data)
+    except Exception as e:
+        st.error(f"An error occurred while processing the data: {str(e)}")
+        st.stop()
 
-    # print(match_data)
-
-    data, batter, bowler = feature_extraction(match_data)
-
+    # Display match result
     progression_graph = get_progression_graph(data)
+    result_text = progression_graph.layout.title.text.split('<br>')
+    st.markdown(f'<div class="match-result">{result_text[0]}<br>{result_text[1]}</div>', unsafe_allow_html=True)
 
-    top_batters = get_top_batters(batter)
+    # Display visualizations
+    tab1, tab2, tab3 = st.tabs(["Match Progression", "Top Performers", "Detailed Stats"])
 
-    top_bowlers = get_top_bowlers(bowler)
+    with tab1:
+        st.subheader("Match Progression")
+        st.plotly_chart(progression_graph, use_container_width=True)
 
-    
+    with tab2:
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Top Batters")
+            top_batters = get_top_batters(batter)
+            st.plotly_chart(top_batters, use_container_width=True)
+        with col2:
+            st.subheader("Top Bowlers")
+            top_bowlers = get_top_bowlers(bowler)
+            st.plotly_chart(top_bowlers, use_container_width=True)
 
-    st.title("Cricket Match Visualization")
+    with tab3:
+        if st.checkbox("Show raw data"):
+            st.dataframe(data)
 
-    
-
-    # Display the progression graph
-    st.subheader("Match Progression")
-    progression_graph.update_layout(height=800)
-    st.plotly_chart(progression_graph, use_container_width=True, height=800)
-
-    # Create two columns for batters and bowlers
-    col1, col2 = st.columns(2)
-
-    # Display the top batters graph in the first column
-    with col1:
-        st.subheader("Top Batters")
-        st.plotly_chart(top_batters, use_container_width=True)
-
-    # Display the top bowlers graph in the second column
-    with col2:
-        st.subheader("Top Bowlers")
-        st.plotly_chart(top_bowlers, use_container_width=True)
+        with st.expander("Match Details"):
+            st.write(f"Date: {match_data['start_date'].iloc[0]}")
+            st.write(f"Venue: {match_data['venue'].iloc[0]}")
 
 
 if __name__ == '__main__':
