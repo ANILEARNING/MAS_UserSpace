@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
-
+import requests
 
 def get_matchups_data():
     
@@ -58,132 +58,118 @@ def get_matchups_data():
 
     return matchup
 
-
 def bat_vs_bowl_matchup():
-    
+    # Set page config
+    # st.set_page_config(layout="wide", page_title="IPL Matchup Dashboard")
+
+    # Custom CSS for overall styling
+    st.markdown("""
+    <style>
+    .stApp {
+        background-color: #FFFFFF;
+        color: #333333;
+    }
+    .stSelectbox > div > div {
+        background-color: #F0F2F6;
+    }
+    .metric-box {
+        background-color: #F0F2F6;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .metric-title {
+        color: #555555;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    .metric-value {
+        color: #1E88E5;
+        font-size: 32px;
+        font-weight: bold;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     st.markdown(
         """
-        <h1 style='text-align: center; color: #FFFFFF;'>IPL Matchup Dashboard</h1>
+        <h1 style='text-align: center; color: #1E88E5; padding: 20px 0;'>IPL Matchup Dashboard</h1>
         """,
         unsafe_allow_html=True
     )
 
-    # st.title('IPL Matchup Dashboard')
+    # Create tabs
+    tab1, tab2 = st.tabs(["Matchup Analysis", "Raw Data"])
 
-    # weakness = pd.read_csv('.\\IPL_Data\\all_ipl_data.csv')
+    with tab1:
+        try:
+            weakness = get_matchups_data()
 
-    weakness = get_matchups_data()
+            # Get All Batters and Bowlers in a List
+            batters_list = sorted(list(set(weakness.striker.to_list())))
+            bowlers_list = sorted(list(set(weakness.bowler.to_list())))
 
-    # Get All Batters and Bowlers in a List
-    batters_list = list(set(weakness.striker.to_list()))
-    bowlers_list = list(set(weakness.bowler.to_list()))
+            col1, col2 = st.columns(2)
+            with col1:
+                batter_select = st.selectbox('Select Batter:', batters_list, index=batters_list.index('V Kohli') if 'V Kohli' in batters_list else 0)
+            with col2:
+                bowler_select = st.selectbox('Select Bowler:', bowlers_list, index=bowlers_list.index('JJ Bumrah') if 'JJ Bumrah' in bowlers_list else 0)
 
-    # Function to filter list based on search input
-    def filter_list(search_term, items):
-        return [item for item in items if search_term.lower() in item.lower()]
+            # Filter matchup data based on input names
+            filtered_data = weakness[
+                (weakness['striker'] == batter_select) & (weakness['bowler'] == bowler_select)]
 
-    # Input fields for batter and bowler names
-    # batter_name = st.text_input('Enter batter name:', 'Kohli')
-    # filtered_batters = filter_list(batter_name, batters_list)
-    batter_select = st.selectbox('Select Batter:', batters_list, index=200)
-    # bowler_name = st.text_input('Enter bowler name:', 'Bumrah')
+            # Filter only Required Columns
+            filtered_data = filtered_data[['striker', 'bowler', 'innings', 'runs_scored', 'balls_faced',
+                                           'dismissals', 'batting_SR', 'dot_percentage']]
 
-    bowler_select = st.selectbox('Select Bowler:', bowlers_list, index=69)
+            if not filtered_data.empty:
+                st.markdown(f"<h2 style='text-align: center; color: #333333; padding: 20px 0;'>{batter_select} vs {bowler_select}</h2>", unsafe_allow_html=True)
 
-    # Filter matchup data based on input names
-    filtered_data = weakness[
-        (weakness['striker'].str.contains(batter_select)) & (weakness['bowler'].str.contains(bowler_select))]
+                # Create columns for each box
+                col1, col2, col3 = st.columns(3)
 
-    # Filter only Required Columns
-    filtered_data = filtered_data[['striker', 'bowler', 'innings', 'runs_scored', 'balls_faced',
-                                   'dismissals', 'batting_SR', 'dot_percentage']]
+                # Custom function to create metric box
+                def metric_box(title, value):
+                    return f"""
+                    <div class="metric-box">
+                        <div class="metric-title">{title}</div>
+                        <div class="metric-value">{value}</div>
+                    </div>
+                    """
 
-    if not filtered_data.empty:
-        st.markdown("<h1 style='text-align: center; color: yellow;'>Matchup Summary</h1>", unsafe_allow_html=True)
-        # st.write("## " + filtered_data['striker'].iloc[0] + " vs " + filtered_data['bowler'].iloc[0])
-        st.markdown(
-            f"""
-            <h3 style='text-align: center; color: #FFFFFF;'>{filtered_data['striker'].iloc[0]} vs {filtered_data['bowler'].iloc[0]}</h3>
-            """,
-            unsafe_allow_html=True
-        )
-        st.markdown("---")
+                # Display each field in an enclosed box
+                with col1:
+                    st.markdown(metric_box("Innings", filtered_data['innings'].iloc[0]), unsafe_allow_html=True)
+                    st.markdown(metric_box("Runs Scored", filtered_data['runs_scored'].iloc[0]), unsafe_allow_html=True)
 
-        # Create columns for each box
-        col1, col2 = st.columns(2)
+                with col2:
+                    st.markdown(metric_box("Dismissals", filtered_data['dismissals'].iloc[0]), unsafe_allow_html=True)
+                    st.markdown(metric_box("Balls Faced", filtered_data["balls_faced"].iloc[0]), unsafe_allow_html=True)
 
-        # Display each field in an enclosed box
-        with col1:
-            # st.info(f" Innings: \n ## **{filtered_data['innings'].iloc[0]}**")
-            st.markdown(
-                f"""
-                <div style='background-color: #172D43; border-radius: 5px; padding: 10px; text-align: center;'>
-                    <span style='color: #C7EBF3;'>Innings<br> <b style= 'font-size: 50px;'>{filtered_data['innings'].iloc[0]}</b></span>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-        with col2:
-            # st.error(f"Dismissals:\n ## **{filtered_data['dismissals'].iloc[0]}**")
-            st.markdown(
-                f"""
-                <div style='background-color: #3E2327; border-radius: 5px; padding: 10px; text-align: center;'>
-                    <span style='color: #FFDEDE;'>Dismissals<br> <b style= 'font-size: 50px;'>{filtered_data['dismissals'].iloc[0]}</b></span>
-                </div>
-                <div style='padding-top: 15px;'></div>
-                """,
-                unsafe_allow_html=True
-            )
+                with col3:
+                    st.markdown(metric_box("Batting Strike Rate", f"{filtered_data['batting_SR'].iloc[0]:.2f}"), unsafe_allow_html=True)
+                    st.markdown(metric_box("Dot Percentage", f"{filtered_data['dot_percentage'].iloc[0]:.2f}%"), unsafe_allow_html=True)
 
-        col3, col4 = st.columns(2)
-        with col3:
-            # st.success(f"Runs Scored: \n ## **{filtered_data['runs_scored'].iloc[0]}**")
-            st.markdown(
-                f"""
-                <div style='background-color: #173928; border-radius: 5px; padding: 10px; text-align: center;'>
-                    <span style='color: #D4EDDA;'>Runs Scored<br> <b style= 'font-size: 50px;'>{filtered_data['runs_scored'].iloc[0]}</b></span>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-        with col4:
-            # st.warning(f'Balls Faced: \n ## **{filtered_data["balls_faced"].iloc[0]}**')
-            st.markdown(
-                f"""
-                <div style='background-color: #3E3C15; border-radius: 5px; padding: 10px; text-align: center;'>
-                    <span style='color: #FFFFBC;'>Balls Faced<br> <b style= 'font-size: 50px;'>{filtered_data["balls_faced"].iloc[0]}</b></span>
-                </div>
-                <div style='padding-top: 15px;'></div>
-                """,
-                unsafe_allow_html=True
-            )
-        col5, col6 = st.columns(2)
-        with col5:
-            # st.info(f"Batting Strike Rate:\n ## **{int(filtered_data['batting_SR'].iloc[0])}**")
-            st.markdown(
-                f"""
-                        <div style='background-color: #282863; border-radius: 5px; padding: 10px; text-align: center;'>
-                            <span style='color: #b6b6e3;'>Batting Strike Rate<br> <b style= 'font-size: 50px;'>{int(filtered_data['batting_SR'].iloc[0])}</b></span>
-                        </div>
-                        """,
-                unsafe_allow_html=True
-            )
-        with col6:
-            # st.success(f"Dot Percentage:\n ## **{int(filtered_data['dot_percentage'].iloc[0])}**")
-            st.markdown(
-                f"""
-                <div style='background-color: #523117; border-radius: 5px; padding: 10px; text-align: center;'>
-                    <span style='color: #e8d3c3;'>Dots Percentage<br> <b style= 'font-size: 50px;'>{int(filtered_data['dot_percentage'].iloc[0])}</b></span>
-                </div>
-                <div style='padding-top: 15px;'></div>
-                """,
-                unsafe_allow_html=True
-            )
+            else:
+                st.warning("No data found for this matchup. Please select different players.")
+
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
+            st.error("Please try again or contact support if the problem persists.")
+
+    with tab2:
+        try:
+            if 'filtered_data' in locals() and not filtered_data.empty:
+                st.markdown("<h2 style='text-align: center; color: #333333; padding: 20px 0;'>Raw Data</h2>", unsafe_allow_html=True)
+                st.dataframe(filtered_data.style.highlight_max(axis=0, color='#E3F2FD').highlight_min(axis=0, color='#FFCDD2'))
+            else:
+                st.info("No data available. Please select players in the Matchup Analysis tab.")
+        except Exception as e:
+            st.error(f"An error occurred while displaying raw data: {str(e)}")
 
 
 def main():
     bat_vs_bowl_matchup()
-
-
-if __name__ == '__main__':
-    main()
