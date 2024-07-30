@@ -352,7 +352,14 @@ def get_progression_graph(data):
                     x=[inning1['ball_count'].iloc[i]],
                     y=[inning1['cum_runs'].iloc[i]],
                     mode='markers',
-                    marker=dict(color=team_mapping[team2]['colors'][1], size=10),
+                    marker=dict(
+                        color=team_mapping[team2]['colors'][1],
+                        size=10,
+                        line=dict(
+                            color='white',  # Border color
+                            width=1       # Border width
+                        )
+                    ),
                     text=wicket_info,
                     hoverinfo='text',
                     name=wicket_info
@@ -375,19 +382,29 @@ def get_progression_graph(data):
 
     for i in range(len(inning2)):
         if inning2['wicket_fallen'].iloc[i] == 1:
-            if inning2['player_dismissed'].iloc[i] == inning2['striker'].iloc[i]:
-                wicket_info = f"""{team2_short_name}: {inning2['cum_runs'].iloc[i]}/{inning2['cum_wickets'].iloc[i]} ({round(inning2['over_ball'].iloc[i],1)})
-                <br>{inning2['player_dismissed'].iloc[i]} {inning2['striker_final_score'].iloc[i]} """
-            else:
-                wicket_info = f"""{team2_short_name}: {inning2['cum_runs'].iloc[i]}/{inning2['cum_wickets'].iloc[i]} ({round(inning2['over_ball'].iloc[i],1)})
-                <br>{inning2['player_dismissed'].iloc[i]} {inning2['non_striker_final_score'].iloc[i]} """
+            try:
+                if inning2['player_dismissed'].iloc[i] == inning2['striker'].iloc[i]:
+                    wicket_info = f"""{team2_short_name}: {inning2['cum_runs'].iloc[i]}/{inning2['cum_wickets'].iloc[i]} ({round(inning2['over_ball'].iloc[i],1)})
+                    <br>{inning2['player_dismissed'].iloc[i]} {inning2['striker_final_score'].iloc[i]} """
+                else:
+                    wicket_info = f"""{team2_short_name}: {inning2['cum_runs'].iloc[i]}/{inning2['cum_wickets'].iloc[i]} ({round(inning2['over_ball'].iloc[i],1)})
+                    <br>{inning2['player_dismissed'].iloc[i]} {inning2['non_striker_final_score'].iloc[i]} """
+            except:
+                wicket_info = "NA"
 
             fig.add_trace(
                 go.Scatter(
                     x=[inning2['ball_count'].iloc[i]],
                     y=[inning2['cum_runs'].iloc[i]],
                     mode='markers',
-                    marker=dict(color=team_mapping[team1]['colors'][1], size=10),
+                    marker=dict(
+                        color=team_mapping[team1]['colors'][1],  # Marker color
+                        size=10,  # Marker size
+                        line=dict(
+                            color='white',  # Border color
+                            width=1       # Border width
+                        )
+                    ),
                     text=wicket_info,
                     hoverinfo='text',
                     name=wicket_info
@@ -463,18 +480,21 @@ def get_progression_graph(data):
         inning2_death_overs_score =  f"{team2_short_name}: {inning2['cum_runs'].iloc[-1]}/{inning2['cum_wickets'].iloc[-1]}"
 
 
+    # Max Score
+    max_score = max(inning2['cum_runs'].iloc[-1], inning1['cum_runs'].iloc[-1])
+
     # Add powerplay annotation
     fig.add_annotation(x=18, y=0, text=f"Powerplay",
                     showarrow=False, font=dict(color="white", size=12))
 
-    fig.add_annotation(x=18, y=125, text=f"{inning1_powerplay_score}<br>{inning2_powerplay_score}",
+    fig.add_annotation(x=18, y=max_score + 5, text=f"{inning1_powerplay_score}<br>{inning2_powerplay_score}",
                     showarrow=False, font=dict(color="white", size=16))
 
     # Add middle overs annotation
     fig.add_annotation(x=70, y=0, text="Middle Overs",
                     showarrow=False, font=dict(color="white", size=12))
 
-    fig.add_annotation(x=70, y=125, text=f"{inning1_middle_overs_score}<br>{inning2_middle_overs_score}",
+    fig.add_annotation(x=70, y=max_score + 5, text=f"{inning1_middle_overs_score}<br>{inning2_middle_overs_score}",
                     showarrow=False, font=dict(color="white", size=16))
 
 
@@ -482,27 +502,46 @@ def get_progression_graph(data):
     fig.add_annotation(x=110, y= 0, text="Death Overs",
                     showarrow=False, font=dict(color="white", size=12))
 
-    fig.add_annotation(x=110, y=125, text=f"{inning1_death_overs_score}<br>{inning2_death_overs_score}",
+    fig.add_annotation(x=110, y=max_score + 5, text=f"{inning1_death_overs_score}<br>{inning2_death_overs_score}",
                     showarrow=False, font=dict(color="white", size=16))
 
 
-    # Add layout
-    fig.update_layout(
-        title={
-            'text': f'{team1} vs {team2} : Innings Summary<br>{winner} Won By {win_by}',
-            'x': 0.4,
-            'font': {
-                'size': 24  # Increase title font size
-            }
-        },
-        xaxis_title='Balls',
-        yaxis_title='Runs',
-        plot_bgcolor='#313131',
-        paper_bgcolor='#393939',
-        font=dict(color="white"),
-        legend=dict(font=dict(color="white"))
-    )
 
+    try: 
+        # Add layout
+        fig.update_layout(
+            title={
+                'text': f'{team1} vs {team2} : Innings Summary<br>{winner} Won By {win_by}',
+                'x': 0.4,
+                'font': {
+                    'size': 24  # Increase title font size
+                }
+            },
+            xaxis_title='Balls',
+            yaxis_title='Runs',
+            plot_bgcolor='#313131',
+            paper_bgcolor='#393939',
+            font=dict(color="white"),
+            legend=dict(font=dict(color="white"))
+        )
+
+    except:
+        # Super Over
+        fig.update_layout(
+            title={
+                'text': f'{team1} vs {team2} : Innings Summary<br> Match Tied',
+                'x': 0.4,
+                'font': {
+                    'size': 24  # Increase title font size
+                }
+            },
+            xaxis_title='Balls',
+            yaxis_title='Runs',
+            plot_bgcolor='#313131',
+            paper_bgcolor='#393939',
+            font=dict(color="white"),
+            legend=dict(font=dict(color="white"))
+        )
 
     return fig
 
