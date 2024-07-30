@@ -583,7 +583,3 @@ def main():
         with st.expander("Match Details"):
             st.write(f"Date: {match_data['start_date'].iloc[0]}")
             st.write(f"Venue: {match_data['venue'].iloc[0]}")
-
-
-if __name__ == '__main__':
-    main()
