@@ -557,8 +557,8 @@ def main():
 
     # Display match result
     progression_graph = get_progression_graph(data)
-    result_text = progression_graph.layout.title.text.split('<br>')
-    st.markdown(f'<div class="match-result">{result_text[0]}<br>{result_text[1]}</div>', unsafe_allow_html=True)
+    # result_text = progression_graph.layout.title.text.split('<br>')
+    # st.markdown(f'<div class="match-result">{result_text[0]}<br>{result_text[1]}</div>', unsafe_allow_html=True)
 
     # Display visualizations
     tab1, tab2, tab3 = st.tabs(["Match Progression", "Top Performers", "Detailed Stats"])
