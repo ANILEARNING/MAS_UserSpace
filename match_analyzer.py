@@ -470,7 +470,7 @@ def get_top_bowlers(bowler):
     return fig
 
 def main():
-    st.set_page_config(layout="wide")
+    # st.set_page_config(layout="wide")
 
     st.markdown(
         """
