@@ -406,9 +406,9 @@ def get_progression_graph(data):
         },
         xaxis_title='Balls',
         yaxis_title='Runs',
-        plot_bgcolor='rgba(255, 255, 255, 0.9)',
-        paper_bgcolor='rgba(255, 255, 255, 0.9)',
-        font=dict(color="black"),
+        plot_bgcolor='#313131',
+        paper_bgcolor='#393939',
+        font=dict(color="white"),
         legend=dict(font=dict(color="black")),
         hoverlabel=dict(bgcolor="white", font_size=12, font_family="Rockwell"),
         height=800
@@ -437,9 +437,9 @@ def get_top_batters(batter):
         xaxis_title='Final Runs',
         yaxis_title='Batsman',
         yaxis=dict(autorange='reversed'),
-        plot_bgcolor='rgba(255, 255, 255, 0.9)',
-        paper_bgcolor='rgba(255, 255, 255, 0.9)',
-        font=dict(color="black")
+        plot_bgcolor='#313131',
+        paper_bgcolor='#393939',
+        font=dict(color="white")
     )
 
     return fig
@@ -464,7 +464,7 @@ def get_top_bowlers(bowler):
         yaxis=dict(autorange='reversed'),
         plot_bgcolor='#313131',
         paper_bgcolor='#393939',
-        font=dict(color="black")
+        font=dict(color="white")
     )
 
     return fig
