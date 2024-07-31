@@ -66,8 +66,8 @@ def bat_vs_bowl_matchup():
     st.markdown("""
     <style>
     .stApp {
-    background-color: #556B2F; /* Dark olive green */
-    color: #FFFFFF; /* White text */
+    background-color: #FFFFFF; 
+    color: #000000; /* black text */
     }
     .stSelectbox > div > div {
         background-color: #F0F2F6;
