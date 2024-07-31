@@ -479,26 +479,26 @@ def main():
         """
         <style>
         .main {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            background-color: #1E1E1E;
+            color: white;
         }
         .stPlotlyChart {
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .match-result {
             font-size: 24px;
             font-weight: bold;
-            color: #1f77b4;
-            background-color: rgba(255, 255, 255, 0.7);
+            color: #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.1);
             padding: 10px;
             border-radius: 5px;
             margin-bottom: 20px;
         }
         .stSelectbox > div > div {
-            background-color: rgba(255, 255, 255, 0.7) !important;
-            color: black !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
         }
         </style>
         """,
