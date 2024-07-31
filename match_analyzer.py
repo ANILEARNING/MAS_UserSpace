@@ -339,8 +339,8 @@ def get_progression_graph(data):
                     marker=dict(
                         symbol='circle',
                         size=12,
-                        color=team_mapping[team2]['colors'][1],
-                        line=dict(width=2, color='black')
+                        color='#FF5733',
+                        line=dict(width=2, color='#333333')
                     ),
                     text=wicket_info,
                     hoverinfo='text',
@@ -372,8 +372,8 @@ def get_progression_graph(data):
                     marker=dict(
                         symbol='circle',
                         size=12,
-                        color=team_mapping[team1]['colors'][1],
-                        line=dict(width=2, color='white')
+                        color='#FF5733',
+                        line=dict(width=2, color='#333333')
                     ),
                     text=wicket_info,
                     hoverinfo='text',
@@ -402,25 +402,25 @@ def get_progression_graph(data):
         title={
             'text': f'<b>{team1} vs {team2}</b><br><b>{winner} Won By {win_by}</b>' if winner != "Draw" else f'<b>{team1} vs {team2}</b><br><b>Match Tied</b>',
             'x': 0.5,
-            'font': {'size': 24, 'color': 'black'}
+            'font': {'size': 24, 'color': '#333333'}
         },
         xaxis_title='Balls',
         yaxis_title='Runs',
-        plot_bgcolor='#313131',
-        paper_bgcolor='#393939',
-        font=dict(color="white"),
-        legend=dict(font=dict(color="orange")),
-        hoverlabel=dict(bgcolor="white", font_size=12, font_family="Rockwell"),
+        plot_bgcolor='rgba(240, 240, 240, 0.8)',
+        paper_bgcolor='rgba(255, 255, 255, 0.8)',
+        font=dict(color="#333333"),
+        legend=dict(font=dict(color="#333333")),
+        hoverlabel=dict(bgcolor="rgba(255, 255, 255, 0.9)", font_size=12, font_family="Rockwell", font_color="#333333"),
         height=800
     )
 
     # Update text color for better visibility
-    fig.update_traces(textfont=dict(color='black'))
+    fig.update_traces(textfont=dict(color='#333333'))
 
     return fig
 
 def get_top_batters(batter):
-    colors = [team_mapping[team]['colors'][0] for team in batter['batting_team']]
+    colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A']
 
     fig = go.Figure(go.Bar(
         x=batter['striker_final_runs'].head(4),
@@ -437,15 +437,15 @@ def get_top_batters(batter):
         xaxis_title='Final Runs',
         yaxis_title='Batsman',
         yaxis=dict(autorange='reversed'),
-        plot_bgcolor='#313131',
-        paper_bgcolor='#393939',
-        font=dict(color="white")
+        plot_bgcolor='rgba(240, 240, 240, 0.8)',
+        paper_bgcolor='rgba(255, 255, 255, 0.8)',
+        font=dict(color="#333333")
     )
 
     return fig
 
 def get_top_bowlers(bowler):
-    colors = [team_mapping[team]['colors'][0] for team in bowler['bowling_team']]
+    colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A']
 
     fig = go.Figure(go.Bar(
         x=bowler['bowler_final_wickets'].head(4),
@@ -462,45 +462,40 @@ def get_top_bowlers(bowler):
         xaxis_title='Final Wickets',
         yaxis_title='Bowler',
         yaxis=dict(autorange='reversed'),
-        plot_bgcolor='#313131',
-        paper_bgcolor='#393939',
-        font=dict(color="white")
+        plot_bgcolor='rgba(240, 240, 240, 0.8)',
+        paper_bgcolor='rgba(255, 255, 255, 0.8)',
+        font=dict(color="#333333")
     )
 
     return fig
 
 def main():
-    # st.set_page_config(layout="wide")
-
-    
-    # st.set_page_config(layout="wide")
+    st.set_page_config(layout="wide")
 
     st.markdown(
         """
         <style>
         .main {
-            background-color: #1E1E1E;
-            color: white;
+            background-color: #F0F0F0;
+            color: #333333;
         }
         .stPlotlyChart {
-            background-color: linear-gradient(
-                                  rgba(128, 128, 128, 1),
-                                  rgba(0, 0, 0, 0.5));
+            background-color: rgba(255, 255, 255, 0.9);
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .match-result {
             font-size: 24px;
             font-weight: bold;
-            color: #FFFFFF;
-            background-color: rgba(255, 255, 255, 0.1);
+            color: #333333;
+            background-color: rgba(255, 255, 255, 0.2);
             padding: 10px;
             border-radius: 5px;
             margin-bottom: 20px;
         }
         .stSelectbox > div > div {
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            color: white !important;
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            color: #333333 !important;
         }
         </style>
         """,
