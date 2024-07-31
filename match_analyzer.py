@@ -371,7 +371,7 @@ def get_progression_graph(data):
                     mode='markers',
                     marker=dict(
                         symbol='circle',
-                        size=15,
+                        size=12,
                         color=team_mapping[team1]['colors'][1],
                         line=dict(width=2, color='white')
                     ),
@@ -399,11 +399,11 @@ def get_progression_graph(data):
 
     # Update layout
     fig.update_layout(
-        # title={
-        #     'text': f'<b>{team1} vs {team2}</b><br><b>{winner} Won By {win_by}</b>' if winner != "Draw" else f'<b>{team1} vs {team2}</b><br><b>Match Tied</b>',
-        #     'x': 0.5,
-        #     'font': {'size': 24, 'color': 'black'}
-        # },
+        title={
+            'text': f'<b>{team1} vs {team2}</b><br><b>{winner} Won By {win_by}</b>' if winner != "Draw" else f'<b>{team1} vs {team2}</b><br><b>Match Tied</b>',
+            'x': 0.5,
+            'font': {'size': 24, 'color': 'black'}
+        },
         xaxis_title='Balls',
         yaxis_title='Runs',
         plot_bgcolor='#313131',
@@ -558,7 +558,7 @@ def main():
     # Display match result
     progression_graph = get_progression_graph(data)
     # result_text = progression_graph.layout.title.text.split('<br>')
-    # st.markdown(f'<div class="match-result">{result_text[0]}<br>{result_text[1]}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="match-result">{result_text[0]}<br>{result_text[1]}</div>', unsafe_allow_html=True)
 
     # Display visualizations
     tab1, tab2, tab3 = st.tabs(["Match Progression", "Top Performers", "Detailed Stats"])
