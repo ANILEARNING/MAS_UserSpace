@@ -337,7 +337,7 @@ def get_progression_graph(data):
                     y=[inning1['cum_runs'].iloc[i]],
                     mode='markers',
                     marker=dict(
-                        symbol='',
+                        symbol='circle',
                         size=12,
                         color=team_mapping[team2]['colors'][1],
                         line=dict(width=2, color='black')
