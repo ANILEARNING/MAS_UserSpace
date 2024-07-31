@@ -337,8 +337,8 @@ def get_progression_graph(data):
                     y=[inning1['cum_runs'].iloc[i]],
                     mode='markers',
                     marker=dict(
-                        symbol='star',
-                        size=15,
+                        symbol='',
+                        size=12,
                         color=team_mapping[team2]['colors'][1],
                         line=dict(width=2, color='black')
                     ),
@@ -464,7 +464,7 @@ def get_top_bowlers(bowler):
         yaxis=dict(autorange='reversed'),
         plot_bgcolor='#313131',
         paper_bgcolor='#393939',
-        font=dict(color="white")
+        font=dict(color="black")
     )
 
     return fig
@@ -483,7 +483,9 @@ def main():
             color: white;
         }
         .stPlotlyChart {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: linear-gradient(
+                                  rgba(128, 128, 128, 1),
+                                  rgba(0, 0, 0, 0.5));
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
