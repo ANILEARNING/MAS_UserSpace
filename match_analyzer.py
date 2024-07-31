@@ -370,7 +370,7 @@ def get_progression_graph(data):
                     y=[inning2['cum_runs'].iloc[i]],
                     mode='markers',
                     marker=dict(
-                        symbol='star',
+                        symbol='circle',
                         size=15,
                         color=team_mapping[team1]['colors'][1],
                         line=dict(width=2, color='white')
@@ -399,17 +399,17 @@ def get_progression_graph(data):
 
     # Update layout
     fig.update_layout(
-        title={
-            'text': f'<b>{team1} vs {team2}</b><br><b>{winner} Won By {win_by}</b>' if winner != "Draw" else f'<b>{team1} vs {team2}</b><br><b>Match Tied</b>',
-            'x': 0.5,
-            'font': {'size': 24, 'color': 'black'}
-        },
+        # title={
+        #     'text': f'<b>{team1} vs {team2}</b><br><b>{winner} Won By {win_by}</b>' if winner != "Draw" else f'<b>{team1} vs {team2}</b><br><b>Match Tied</b>',
+        #     'x': 0.5,
+        #     'font': {'size': 24, 'color': 'black'}
+        # },
         xaxis_title='Balls',
         yaxis_title='Runs',
         plot_bgcolor='#313131',
         paper_bgcolor='#393939',
         font=dict(color="white"),
-        legend=dict(font=dict(color="black")),
+        legend=dict(font=dict(color="orange")),
         hoverlabel=dict(bgcolor="white", font_size=12, font_family="Rockwell"),
         height=800
     )
