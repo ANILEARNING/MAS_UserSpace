@@ -488,13 +488,13 @@ def main():
             font-size: 24px;
             font-weight: bold;
             color: #FFA500;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 1);
             padding: 10px;
             border-radius: 5px;
             margin-bottom: 20px;
         }
         .stSelectbox > div > div {
-            background-color: rgba(255, 255, 255, 0.1) !important;
+            background-color: rgba(255, 255, 255, 1) !important;
             color: white !important;
             font-family: Arial, sans-serif; /* You can specify any font you prefer */
             font-size: 14px; /* Adjust the font size as needed */
@@ -576,7 +576,7 @@ def main():
         st.error(f"An error occurred while generating the progression graph: {str(e)}")
         match_result = "Match result unavailable"
 
-    st.markdown(f'<div style="font-size: 24px; font-weight: bold; color: #FFA500; background-color: rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 5px; margin-bottom: 20px;">{match_result}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="font-size: 24px; font-weight: bold; color: #FFA500; background-color: rgba(255, 255, 255, 1); padding: 10px; border-radius: 5px; margin-bottom: 20px;">{match_result}</div>', unsafe_allow_html=True)
 
 
     # Display visualizations
