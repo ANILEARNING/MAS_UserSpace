@@ -559,10 +559,15 @@ def main():
         st.error(f"An error occurred while processing the data: {str(e)}")
         st.stop()
 
-    # Display match result
-    progression_graph = get_progression_graph(data)
+    # Safely extract the result text
     result_text = progression_graph.layout.title.text.split('<br>')
-    st.markdown(f'<div class="match-result">{result_text[0]}<br>{result_text[1]}</div>', unsafe_allow_html=True)
+    if len(result_text) >= 2:
+        match_result = f"{result_text[0]}<br>{result_text[1]}"
+    elif len(result_text) == 1:
+        match_result = result_text[0]
+    else:
+        match_result = "Match result unavailable"
+    st.markdown(f'<div class="match-result">{match_result}</div>', unsafe_allow_html=True)
 
     tab1, tab2, tab3 = st.tabs([
         '<p class="streamlit-header">Match Progression</p>',
