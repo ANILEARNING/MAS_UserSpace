@@ -520,8 +520,7 @@ def main():
     col1, col2 = st.columns(2)
     with col1:
         seasons = sorted(all_ipl_data['season'].unique(), reverse=True)
-        selected_season = st.selectbox('<p class="streamlit-header">Select Season</p>', seasons, key="season_filter", format_func=lambda x: f'<p class="streamlit-header">{x}</p>')
-
+        selected_season = st.selectbox("Select Season", seasons, key="season_filter")
     filtered_data = all_ipl_data[all_ipl_data['season'] == selected_season]
     
     match_ids = list(filtered_data.match_id.unique())
@@ -541,7 +540,8 @@ def main():
 
     matches_names = list(matches_list.keys())
     with col2:
-        select_match = st.selectbox('<p class="streamlit-header">Select Match:</p>', matches_names, key="match_filter", format_func=lambda x: f'<p class="streamlit-header">{x}</p>')
+        select_match = st.selectbox("Select Match:", matches_names, key="match_filter")
+
 
     match_id = matches_list[select_match]
     match_data = filtered_data[filtered_data['match_id'] == match_id]
@@ -573,17 +573,15 @@ def main():
         st.error(f"An error occurred while generating the progression graph: {str(e)}")
         match_result = "Match result unavailable"
 
-    st.markdown(f'<div class="match-result">{match_result}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="font-size: 24px; font-weight: bold; color: #FFA500; background-color: rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 5px; margin-bottom: 20px;">{match_result}</div>', unsafe_allow_html=True)
+
 
     # Display visualizations
-    tab1, tab2, tab3 = st.tabs([
-        '<p class="streamlit-header">Match Progression</p>',
-        '<p class="streamlit-header">Top Performers</p>',
-        '<p class="streamlit-header">Detailed Stats</p>'
-    ])
+    tab1, tab2, tab3 = st.tabs(["Match Progression", "Top Performers", "Detailed Stats"])
+
 
     with tab1:
-        st.markdown('<h2 class="streamlit-header">Match Progression</h2>', unsafe_allow_html=True)
+        st.header("Match Progression")
         if progression_graph:
             st.plotly_chart(progression_graph, use_container_width=True)
         else:
