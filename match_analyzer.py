@@ -340,7 +340,7 @@ def get_progression_graph(data):
                         symbol='circle',
                         size=12,
                         color=team_mapping[team2]['colors'][1],
-                        line=dict(width=2, color='black')
+                        line=dict(width=2, color='gray')
                     ),
                     text=wicket_info,
                     hoverinfo='text',
@@ -395,27 +395,27 @@ def get_progression_graph(data):
         if score1 is not None and score2 is not None:
             fig.add_annotation(x=x_pos, y=max_score + 5, 
                                text=f"{team1_short_name}: {score1}<br>{team2_short_name}: {score2}",
-                               showarrow=False, font=dict(color="white", size=16))
+                               showarrow=False, font=dict(color="#FF0000", size=16))
 
     # Update layout
     fig.update_layout(
         title={
             'text': f'<b>{team1} vs {team2}</b><br><b>{winner} Won By {win_by}</b>' if winner != "Draw" else f'<b>{team1} vs {team2}</b><br><b>Match Tied</b>',
             'x': 0.5,
-            'font': {'size': 24, 'color': 'black'}
+            'font': {'size': 24, 'color': 'orange'}
         },
         xaxis_title='Balls',
         yaxis_title='Runs',
         plot_bgcolor='#313131',
         paper_bgcolor='#393939',
-        font=dict(color="white"),
+        font=dict(color="#FF0000"),
         legend=dict(font=dict(color="orange")),
         hoverlabel=dict(bgcolor="white", font_size=12, font_family="Rockwell"),
         height=800
     )
 
     # Update text color for better visibility
-    fig.update_traces(textfont=dict(color='black'))
+    fig.update_traces(textfont=dict(color='#FF0000'))
 
     return fig
 
@@ -439,7 +439,7 @@ def get_top_batters(batter):
         yaxis=dict(autorange='reversed'),
         plot_bgcolor='#313131',
         paper_bgcolor='#393939',
-        font=dict(color="white")
+        font=dict(color="#FF0000")
     )
 
     return fig
@@ -464,7 +464,7 @@ def get_top_bowlers(bowler):
         yaxis=dict(autorange='reversed'),
         plot_bgcolor='#313131',
         paper_bgcolor='#393939',
-        font=dict(color="white")
+        font=dict(color="#FF0000")
     )
 
     return fig
@@ -492,7 +492,7 @@ def main():
         .match-result {
             font-size: 24px;
             font-weight: bold;
-            color: #FFFFFF;
+            color: #FF0000;
             background-color: rgba(255, 255, 255, 0.1);
             padding: 10px;
             border-radius: 5px;
