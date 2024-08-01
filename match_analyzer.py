@@ -470,48 +470,43 @@ def get_top_bowlers(bowler):
     return fig
 
 def main():
-    # st.set_page_config(layout="wide")
-
-    
-    # st.set_page_config(layout="wide")
-
     st.markdown(
-    """
-    <style>
-    .main {
-        background-color: #1E1E1E;
-        color: white;
-    }
-    .stPlotlyChart {
-        background-color: linear-gradient(
-                              rgba(128, 128, 128, 1),
-                              rgba(0, 0, 0, 0.5));
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .match-result {
-        font-size: 24px;
-        font-weight: bold;
-        color: #FFA500;
-        background-color: rgba(255, 255, 255, 0.1);
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-    }
-    .stSelectbox > div > div {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        color: white !important;
-    }
-    .streamlit-header {
-        color: #FFA500 !important;
-        font-weight: bold;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
+        """
+        <style>
+        .main {
+            background-color: #1E1E1E;
+            color: white;
+        }
+        .stPlotlyChart {
+            background-color: linear-gradient(
+                                  rgba(128, 128, 128, 1),
+                                  rgba(0, 0, 0, 0.5));
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .match-result {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFA500;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .stSelectbox > div > div {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+        }
+        .streamlit-header {
+            color: #FFA500 !important;
+            font-weight: bold;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
     )
 
-    st.title("Cricket Match Analyzer")
+    st.markdown('<h1 class="streamlit-header">Cricket Match Analyzer</h1>', unsafe_allow_html=True)
 
     # Load data
     @st.cache_data
@@ -547,7 +542,7 @@ def main():
     matches_names = list(matches_list.keys())
     with col2:
         select_match = st.selectbox('<p class="streamlit-header">Select Match:</p>', matches_names, key="match_filter", format_func=lambda x: f'<p class="streamlit-header">{x}</p>')
-            
+
     match_id = matches_list[select_match]
     match_data = filtered_data[filtered_data['match_id'] == match_id]
 
@@ -559,16 +554,28 @@ def main():
         st.error(f"An error occurred while processing the data: {str(e)}")
         st.stop()
 
-    # Safely extract the result text
-    result_text = progression_graph.layout.title.text.split('<br>')
-    if len(result_text) >= 2:
-        match_result = f"{result_text[0]}<br>{result_text[1]}"
-    elif len(result_text) == 1:
-        match_result = result_text[0]
-    else:
+    # Display match result
+    try:
+        progression_graph = get_progression_graph(data)
+        
+        # Safely extract the result text
+        if progression_graph and progression_graph.layout and progression_graph.layout.title and progression_graph.layout.title.text:
+            result_text = progression_graph.layout.title.text.split('<br>')
+            if len(result_text) >= 2:
+                match_result = f"{result_text[0]}<br>{result_text[1]}"
+            elif len(result_text) == 1:
+                match_result = result_text[0]
+            else:
+                match_result = "Match result unavailable"
+        else:
+            match_result = "Match result unavailable"
+    except Exception as e:
+        st.error(f"An error occurred while generating the progression graph: {str(e)}")
         match_result = "Match result unavailable"
+
     st.markdown(f'<div class="match-result">{match_result}</div>', unsafe_allow_html=True)
 
+    # Display visualizations
     tab1, tab2, tab3 = st.tabs([
         '<p class="streamlit-header">Match Progression</p>',
         '<p class="streamlit-header">Top Performers</p>',
@@ -577,7 +584,10 @@ def main():
 
     with tab1:
         st.markdown('<h2 class="streamlit-header">Match Progression</h2>', unsafe_allow_html=True)
-        st.plotly_chart(progression_graph, use_container_width=True)
+        if progression_graph:
+            st.plotly_chart(progression_graph, use_container_width=True)
+        else:
+            st.write("Match progression data is not available.")
 
     with tab2:
         col1, col2 = st.columns(2)
