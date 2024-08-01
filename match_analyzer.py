@@ -626,7 +626,7 @@ def main():
         </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<h1 class="streamlit-header">IPL Match Analysis Dashboard</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="streamlit-header">IPL Match Analyzer</h1>', unsafe_allow_html=True)
 
     # Load data
     all_ipl_data = pd.read_csv('IPL_Data/raw_ipl_data.csv')
@@ -655,7 +655,7 @@ def main():
         matches_list[filter_string] = match_id
 
     with col2:
-        select_match = st.selectbox('Select Match:', list(matches_list.keys()))
+        select_match = t.selectbox('Select Match:', match_names,index=2)
 
     match_id = matches_list[select_match]
     match_data = all_ipl_data[all_ipl_data['match_id'] == match_id]
