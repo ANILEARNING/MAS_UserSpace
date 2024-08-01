@@ -400,9 +400,9 @@ def get_progression_graph(data):
     # Update layout
     fig.update_layout(
         title={
-            'text': f'<b>{team1} vs {team2}</b><br><b>{winner} Won By {win_by}</b>' if winner != "Draw" else f'<b>{team1} vs {team2}</b><br><b>Match Tied</b>',
+            'text': f'<b>{winner} Won By {win_by}</b>' if winner != "Draw" else '<b>Match Tied</b>',
             'x': 0.5,
-            'font': {'size': 24, 'color': 'orange'}
+            'font': {'size': 24, 'color': '#FFA500'}
         },
         xaxis_title='Balls',
         yaxis_title='Runs',
@@ -476,35 +476,39 @@ def main():
     # st.set_page_config(layout="wide")
 
     st.markdown(
-        """
-        <style>
-        .main {
-            background-color: #1E1E1E;
-            color: white;
-        }
-        .stPlotlyChart {
-            background-color: linear-gradient(
-                                  rgba(128, 128, 128, 1),
-                                  rgba(0, 0, 0, 0.5));
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .match-result {
-            font-size: 24px;
-            font-weight: bold;
-            color: #FF0000;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .stSelectbox > div > div {
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            color: white !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
+    """
+    <style>
+    .main {
+        background-color: #1E1E1E;
+        color: white;
+    }
+    .stPlotlyChart {
+        background-color: linear-gradient(
+                              rgba(128, 128, 128, 1),
+                              rgba(0, 0, 0, 0.5));
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .match-result {
+        font-size: 24px;
+        font-weight: bold;
+        color: #FFA500;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    .stSelectbox > div > div {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+    }
+    .streamlit-header {
+        color: #FFA500 !important;
+        font-weight: bold;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
     )
 
     st.title("Cricket Match Analyzer")
@@ -521,7 +525,7 @@ def main():
     col1, col2 = st.columns(2)
     with col1:
         seasons = sorted(all_ipl_data['season'].unique(), reverse=True)
-        selected_season = st.selectbox("Select Season", seasons, key="season_filter")
+        selected_season = st.selectbox('<p class="streamlit-header">Select Season</p>', seasons, key="season_filter", format_func=lambda x: f'<p class="streamlit-header">{x}</p>')
 
     filtered_data = all_ipl_data[all_ipl_data['season'] == selected_season]
     
@@ -542,8 +546,8 @@ def main():
 
     matches_names = list(matches_list.keys())
     with col2:
-        select_match = st.selectbox('Select Match:', matches_names, key="match_filter")
-
+        select_match = st.selectbox('<p class="streamlit-header">Select Match:</p>', matches_names, key="match_filter", format_func=lambda x: f'<p class="streamlit-header">{x}</p>')
+            
     match_id = matches_list[select_match]
     match_data = filtered_data[filtered_data['match_id'] == match_id]
 
@@ -560,25 +564,29 @@ def main():
     result_text = progression_graph.layout.title.text.split('<br>')
     st.markdown(f'<div class="match-result">{result_text[0]}<br>{result_text[1]}</div>', unsafe_allow_html=True)
 
-    # Display visualizations
-    tab1, tab2, tab3 = st.tabs(["Match Progression", "Top Performers", "Detailed Stats"])
+    tab1, tab2, tab3 = st.tabs([
+        '<p class="streamlit-header">Match Progression</p>',
+        '<p class="streamlit-header">Top Performers</p>',
+        '<p class="streamlit-header">Detailed Stats</p>'
+    ])
 
     with tab1:
-        st.subheader("Match Progression")
+        st.markdown('<h2 class="streamlit-header">Match Progression</h2>', unsafe_allow_html=True)
         st.plotly_chart(progression_graph, use_container_width=True)
 
     with tab2:
         col1, col2 = st.columns(2)
         with col1:
-            st.subheader("Top Batters")
+            st.markdown('<h2 class="streamlit-header">Top Batters</h2>', unsafe_allow_html=True)
             top_batters = get_top_batters(batter)
             st.plotly_chart(top_batters, use_container_width=True)
         with col2:
-            st.subheader("Top Bowlers")
+            st.markdown('<h2 class="streamlit-header">Top Bowlers</h2>', unsafe_allow_html=True)
             top_bowlers = get_top_bowlers(bowler)
             st.plotly_chart(top_bowlers, use_container_width=True)
 
     with tab3:
+        st.markdown('<h2 class="streamlit-header">Detailed Stats</h2>', unsafe_allow_html=True)
         if st.checkbox("Show raw data"):
             st.dataframe(data)
 
