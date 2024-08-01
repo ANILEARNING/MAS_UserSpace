@@ -488,13 +488,13 @@ def main():
             font-size: 24px;
             font-weight: bold;
             color: #FFA500;
-            background-color: #00FFFF;
+            background-color: rgba(255, 255, 255, 0.1);
             padding: 10px;
             border-radius: 5px;
             margin-bottom: 20px;
         }
         .stSelectbox > div > div {
-            background-color: #00FFFF !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
             color: white !important;
         }
         .streamlit-header {
