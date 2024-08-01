@@ -496,6 +496,9 @@ def main():
         .stSelectbox > div > div {
             background-color: rgba(255, 255, 255, 0.1) !important;
             color: white !important;
+            font-family: Arial, sans-serif; /* You can specify any font you prefer */
+            font-size: 14px; /* Adjust the font size as needed */
+            font-weight: bold; /* Optional: make the font bold */
         }
         .streamlit-header {
             color: #FFA500 !important;
