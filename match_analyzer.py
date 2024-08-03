@@ -660,7 +660,7 @@ def main():
     st.markdown('<h1 class="streamlit-header">IPL Match Analysis Dashboard</h1>', unsafe_allow_html=True)
 
     # Load data
-    all_ipl_data = pd.read_csv('IPL_Data\\raw_ipl_data.csv')
+    all_ipl_data = pd.read_csv('IPL_Data/raw_ipl_data.csv')
 
     # Filters
     col1, col2 = st.columns(2)
