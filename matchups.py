@@ -6,7 +6,7 @@ import requests
 
 def get_matchups_data():
     
-    data = pd.read_csv('IPL_Data/all_ipl_data.csv')
+    data = pd.read_csv('IPL_Data\\all_ipl_data.csv')
 
     # 50s and 100s
 
@@ -71,29 +71,84 @@ def main():
     st.markdown("""
         <style>
         .stat-box {
-            background-color: #1E1E1E;
+            background-color: #f0f2f6;
             border-radius: 5px;
             padding: 10px;
             text-align: center;
             margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .stat-label {
-            color: #E6E6FA;
+            color: #1E1E1E;
             font-size: 14px;
+            font-weight: bold;
         }
         .stat-value {
-            color: #FFD700;
+            color: #0066cc;
             font-size: 24px;
             font-weight: bold;
+        }
+        .dark-mode .stat-box {
+            background-color: #1E1E1E;
+        }
+        .dark-mode .stat-label {
+            color: #E6E6FA;
+        }
+        .dark-mode .stat-value {
+            color: #FFD700;
+        }
+        h1, h2, h3 {
+            color: #0066cc;
+        }
+        .dark-mode h1, .dark-mode h2, .dark-mode h3 {
+            color: #E6E6FA;
         }
         </style>""", unsafe_allow_html=True)
 
     st.markdown(
         """
-        <h1 style='text-align: center; color: #E6E6FA;'>IPL Matchup Dashboard</h1>
+        <h1 style='text-align: center;'>IPL Matchup Dashboard</h1>
         """,
         unsafe_allow_html=True
     )
+
+    # st.markdown(
+    #     """
+    #     <h1 style='text-align: center; color: #E6E6FA;'>IPL Matchup Dashboard</h1>
+    #     """,
+    #     unsafe_allow_html=True
+    # )
+    st.sidebar.markdown("""
+    <h2>UpComing Features in Match Ups:</h2>
+    <div id="blinking-content">
+        <p>• Wagon Wheel</p>
+        <p>• Pitch Maps</p>
+    </div>
+    <style>
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        #blinking-content {
+            animation: blink 1s linear infinite;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Add a placeholder for the script
+    script_placeholder = st.sidebar.empty()
+
+    # Wait for 10 seconds
+    time.sleep(10)
+
+    # After 10 seconds, update the content to remove the animation
+    script_placeholder.markdown("""
+        <style>
+            #blinking-content {
+                animation: none;
+                opacity: 1;
+            }
+        </style>
+        """, unsafe_allow_html=True)
 
     bat_vs_bowl_matchup()
 
@@ -122,10 +177,10 @@ def bat_vs_bowl_matchup():
         st.error(f"An error occurred: {str(e)}")
 
 def display_matchup_summary(data):
-    st.markdown("<h2 style='text-align: center; color: #E6E6FA;'>Matchup Summary</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>Matchup Summary</h2>", unsafe_allow_html=True)
     st.markdown(
         f"""
-        <h3 style='text-align: center; color: #FFFFFF;'>{data['striker'].iloc[0]} vs {data['bowler'].iloc[0]}</h3>
+        <h3 style='text-align: center;'>{data['striker'].iloc[0]} vs {data['bowler'].iloc[0]}</h3>
         """,
         unsafe_allow_html=True
     )
@@ -155,7 +210,7 @@ def display_matchup_summary(data):
             )
 
 def display_detailed_stats(data):
-    st.markdown("<h3 style='text-align: center; color: #E6E6FA;'>Detailed Matchup Statistics</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center;'>Detailed Matchup Statistics</h3>", unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
 
@@ -166,7 +221,7 @@ def display_detailed_stats(data):
             'Fours': data['fours'].iloc[0],
             'Sixes': data['sixes'].iloc[0]
         }
-        st.bar_chart(scoring_data)
+        st.bar_chart(scoring_data,y_label="Total Counts")
 
     with col2:
         st.subheader("Key Performance Indicators")
