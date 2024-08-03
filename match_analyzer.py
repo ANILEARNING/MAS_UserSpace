@@ -743,7 +743,7 @@ def main():
             st.plotly_chart(top_bowlers, use_container_width=True)
 
         # New visualization: Run distribution pie chart
-        st.subheader("Run Distribution")
+        st.subheader("Run Distribution of Whole Innings")
         run_distribution = go.Figure(data=[go.Pie(
             labels=['Ones', 'Twos', 'Threes', 'Fours', 'Sixes', 'Extras'],
             values=[data['is_one'].sum(), data['is_two'].sum()*2, data['is_three'].sum()*3, 
