@@ -128,17 +128,27 @@ def main():
 
 def bat_vs_bowl_matchup():
     try:
-        matchup_data = load_data()
+        # Use session state to store selections
+        if 'batter_select' not in st.session_state:
+            st.session_state.batter_select = None
+        if 'bowler_select' not in st.session_state:
+            st.session_state.bowler_select = None
 
+        # Load data only once
+        if 'matchup_data' not in st.session_state:
+            st.session_state.matchup_data = load_data()
+
+        matchup_data = st.session_state.matchup_data
+        
         batters_list = sorted(list(set(matchup_data.striker.to_list())))
         bowlers_list = sorted(list(set(matchup_data.bowler.to_list())))
-
+        
         col1, col2 = st.columns(2)
         with col1:
-            batter_select = st.selectbox('Select Batter:', batters_list, index=200)
+            batter_select = st.selectbox('Select Batter:', batters_list, index=200, key='batter')
         with col2:
-            bowler_select = st.selectbox('Select Bowler:', bowlers_list, index=69)
-
+            bowler_select = st.selectbox('Select Bowler:', bowlers_list, index=69, key='bowler')
+        
         # Add a "Find" button
         if st.button('Find Matchup'):
             # Show loader only when button is clicked
@@ -148,7 +158,7 @@ def bat_vs_bowl_matchup():
                 
                 filtered_data = matchup_data[
                     (matchup_data['striker'] == batter_select) & (matchup_data['bowler'] == bowler_select)]
-
+                
                 if not filtered_data.empty:
                     display_matchup_summary(filtered_data)
                     display_detailed_stats(filtered_data)
