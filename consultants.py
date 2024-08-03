@@ -2,21 +2,34 @@ import streamlit as st
 import base64
 
 def create_consultant_box(name, photo_path, role, whatsapp_number):
-    col1, col2 = st.columns([1, 2])
-    
-    with col1:
-        st.image(photo_path, width=150)
-    
-    with col2:
-        st.subheader(name)
-        st.write(role)
+    with st.container():
+        col1, col2 = st.columns([1, 2])
         
-        whatsapp_url = f"https://wa.me/{whatsapp_number}"
-        st.markdown(f"[![Message](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)]({whatsapp_url})")
+        with col1:
+            st.image(photo_path, width=150)
+        
+        with col2:
+            st.subheader(name)
+            st.write(role)
+            
+            whatsapp_url = f"https://wa.me/{whatsapp_number}"
+            st.markdown(f"[![Message](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)]({whatsapp_url})")
 
 def main():
     st.title("Consultants")
-
+    
+    # Custom CSS for spacing
+    st.markdown("""
+    <style>
+    .consultant-box {
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     consultants = [
         {
             "name": "Anish S",
@@ -30,31 +43,19 @@ def main():
             "role": "Cricket Social Media Expert",
             "whatsapp": "9967868733"
         },
-        # {
-        #     "name": "Mike Johnson",
-        #     "photo": "path/to/mike_johnson.jpg",
-        #     "role": "Technical Expert",
-        #     "whatsapp": "5555555555"
-        # },
-        # {
-        #     "name": "Sarah Brown",
-        #     "photo": "path/to/sarah_brown.jpg",
-        #     "role": "Project Manager",
-        #     "whatsapp": "8903541468"
-        # }
+        # Add more consultants here if needed
     ]
 
-    col1, col2 = st.columns(2)
-
-    for i, consultant in enumerate(consultants):
-        with col1 if i % 2 == 0 else col2:
+    for consultant in consultants:
+        with st.container():
+            st.markdown('<div class="consultant-box">', unsafe_allow_html=True)
             create_consultant_box(
                 consultant["name"],
                 consultant["photo"],
                 consultant["role"],
                 consultant["whatsapp"]
             )
-            st.write("---")
+            st.markdown('</div>', unsafe_allow_html=True)
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
