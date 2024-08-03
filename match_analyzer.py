@@ -340,13 +340,16 @@ def get_progression_graph(data):
 
     for i in range(len(inning1)):
         if inning1['wicket_fallen'].iloc[i] == 1:
-            if inning1['player_dismissed'].iloc[i] == inning1['striker'].iloc[i]:
-                wicket_info = f"""{team1_short_name}: {inning1['cum_runs'].iloc[i]}/{inning1['cum_wickets'].iloc[i]} ({round(inning1['over_ball'].iloc[i],1)})
-                <br>{inning1['player_dismissed'].iloc[i]} {inning1['striker_final_score'].iloc[i]} """
-            else:
-                wicket_info = f"""{team1_short_name}: {inning1['cum_runs'].iloc[i]}/{inning1['cum_wickets'].iloc[i]} ({round(inning1['over_ball'].iloc[i],1)})
-                <br>{inning1['player_dismissed'].iloc[i]} {inning1[inning1['striker'] == inning1['player_dismissed'].iloc[i]].iloc[-1]} """
-
+            try:
+                if inning1['player_dismissed'].iloc[i] == inning1['striker'].iloc[i]:
+                    wicket_info = f"""{team1_short_name}: {inning1['cum_runs'].iloc[i]}/{inning1['cum_wickets'].iloc[i]} ({round(inning1['over_ball'].iloc[i],1)})
+                    <br>{inning1['player_dismissed'].iloc[i]} {inning1['striker_final_score'].iloc[i]} """
+                else:
+                    wicket_info = f"""{team1_short_name}: {inning1['cum_runs'].iloc[i]}/{inning1['cum_wickets'].iloc[i]} ({round(inning1['over_ball'].iloc[i],1)})
+                    <br>{inning1['player_dismissed'].iloc[i]} {inning1['non_striker_final_score'].iloc[i]} """
+            except:
+                wicket_info = "NA"
+                    
             fig.add_trace(
                 go.Scatter(
                     x=[inning1['ball_count'].iloc[i]],
