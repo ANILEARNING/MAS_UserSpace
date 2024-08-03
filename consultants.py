@@ -43,6 +43,12 @@ def main():
             "role": "Cricket Social Media Expert",
             "whatsapp": "9967868733"
         },
+        {
+            "name": "Radhika patle",
+            "photo": "assets/user_sample.png",
+            "role": "Injury Prevention and Rehabilitation",
+            "whatsapp": "9752622331"
+        },
         # Add more consultants here if needed
     ]
 
