@@ -45,7 +45,7 @@ def main():
         },
         {
             "name": "Radhika patle",
-            "photo": "assets/user_sample.png",
+            "photo": "assets/radhika.jpg",
             "role": "Injury Prevention and Rehabilitation",
             "whatsapp": "919752622331"
         },
