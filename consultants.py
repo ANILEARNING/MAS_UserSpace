@@ -35,19 +35,19 @@ def main():
             "name": "Anish S",
             "photo": "assets/anish.jpg",
             "role": "Full Stack Data Scientist - Cricket",
-            "whatsapp": "8903541468"
+            "whatsapp": "919384972461"
         },
         {
             "name": "Ankit Gujare",
             "photo": "assets/ankit.jpg",
             "role": "Cricket Social Media Expert",
-            "whatsapp": "9967868733"
+            "whatsapp": "919967868733"
         },
         {
             "name": "Radhika patle",
             "photo": "assets/user_sample.png",
             "role": "Injury Prevention and Rehabilitation",
-            "whatsapp": "9752622331"
+            "whatsapp": "919752622331"
         },
         # Add more consultants here if needed
     ]
