@@ -60,9 +60,9 @@ def get_matchups_data():
     return matchup
 
 def load_data():
-    with st.spinner('Loading matchup data...'):
-        time.sleep(2)  # Simulating data loading
-        return get_matchups_data()
+    # with st.spinner('Loading matchup data...'):
+    # time.sleep(2)  # Simulating data loading
+    return get_matchups_data()
 
 def main():
     # st.set_page_config(page_title="IPL Matchup Dashboard", page_icon="🏏", layout="wide")
@@ -70,85 +70,59 @@ def main():
     # Custom CSS for styling
     st.markdown("""
         <style>
+        :root {
+            --primary-color: #1E88E5;
+            --secondary-color: #FFC107;
+            --text-color: #212121;
+            --background-color: #FFFFFF;
+        }
+        .dark-mode {
+            --primary-color: #64B5F6;
+            --secondary-color: #FFD54F;
+            --text-color: #E0E0E0;
+            --background-color: #121212;
+        }
+        body {
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
         .stat-box {
-            background-color: #f0f2f6;
-            border-radius: 5px;
-            padding: 10px;
+            background-color: var(--background-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 15px;
             text-align: center;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .stat-label {
-            color: #1E1E1E;
-            font-size: 14px;
+            color: var(--text-color);
+            font-size: 16px;
             font-weight: bold;
         }
         .stat-value {
-            color: #0066cc;
-            font-size: 24px;
+            color: var(--secondary-color);
+            font-size: 28px;
             font-weight: bold;
         }
-        .dark-mode .stat-box {
-            background-color: #1E1E1E;
-        }
-        .dark-mode .stat-label {
-            color: #E6E6FA;
-        }
-        .dark-mode .stat-value {
-            color: #FFD700;
-        }
         h1, h2, h3 {
-            color: #0066cc;
+            color: var(--primary-color);
         }
-        .dark-mode h1, .dark-mode h2, .dark-mode h3 {
-            color: #E6E6FA;
+        .stButton > button {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            padding: 0.5em 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .stButton > button:hover {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
         }
         </style>""", unsafe_allow_html=True)
-
-    st.markdown(
-        """
-        <h1 style='text-align: center;'>IPL Matchup Dashboard</h1>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # st.markdown(
-    #     """
-    #     <h1 style='text-align: center; color: #E6E6FA;'>IPL Matchup Dashboard</h1>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
-    st.sidebar.markdown("""
-    <h2>UpComing Features in Match Ups:</h2>
-    <div id="blinking-content">
-        <p>• Wagon Wheel</p>
-        <p>• Pitch Maps</p>
-    </div>
-    <style>
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-        #blinking-content {
-            animation: blink 1s linear infinite;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # Add a placeholder for the script
-    script_placeholder = st.sidebar.empty()
-
-    # Wait for 10 seconds
-    time.sleep(10)
-
-    # After 10 seconds, update the content to remove the animation
-    script_placeholder.markdown("""
-        <style>
-            #blinking-content {
-                animation: none;
-                opacity: 1;
-            }
-        </style>
-        """, unsafe_allow_html=True)
 
     bat_vs_bowl_matchup()
 
@@ -165,14 +139,22 @@ def bat_vs_bowl_matchup():
         with col2:
             bowler_select = st.selectbox('Select Bowler:', bowlers_list, index=69)
 
-        filtered_data = matchup_data[
-            (matchup_data['striker'] == batter_select) & (matchup_data['bowler'] == bowler_select)]
+        # Add a "Find" button
+        if st.button('Find Matchup'):
+            # Show loader only when button is clicked
+            with st.spinner('Fetching matchup data...'):
+                # Simulate a delay (you can remove this in production)
+                time.sleep(2)
+                
+                filtered_data = matchup_data[
+                    (matchup_data['striker'] == batter_select) & (matchup_data['bowler'] == bowler_select)]
 
-        if not filtered_data.empty:
-            display_matchup_summary(filtered_data)
-            display_detailed_stats(filtered_data)
-        else:
-            st.warning("No data available for this matchup.")
+                if not filtered_data.empty:
+                    display_matchup_summary(filtered_data)
+                    display_detailed_stats(filtered_data)
+                else:
+                    st.warning("No data available for this matchup.")
+
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
 
