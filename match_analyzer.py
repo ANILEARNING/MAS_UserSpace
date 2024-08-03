@@ -1,9 +1,10 @@
+import time
 import pandas as pd
 import numpy as np
 import streamlit as st
 import plotly.graph_objects as go
 from datetime import datetime
-
+import decimal
 
 team_mapping = {
         "Mumbai Indians": {"short": "MI", "colors": ["#78a5ff", "#133b77"]},  # Brighter shade of blue
@@ -292,9 +293,22 @@ def get_progression_graph(data):
     team1_final_wickets = inning1['cum_wickets'].iloc[-1]
     team2_final_wickets = inning2['cum_wickets'].iloc[-1]
 
+    def round_overs(overs):
+        if isinstance(overs, str):
+            full_overs, partial_overs = map(int, overs.split('.'))
+        else:
+            decimal_overs = decimal.Decimal(str(overs))
+            full_overs = int(decimal_overs)
+            partial_overs = int((decimal_overs - full_overs) * 10)
 
-    inning1_overs = inning1['ball'].iloc[-1]
-    inning2_overs = inning2['ball'].iloc[-1]
+        if full_overs >= 20:
+            return 20
+        elif partial_overs >= 6:
+            return full_overs + 1
+        else:
+            return f'{full_overs}.{partial_overs}'
+    inning1_overs = round_overs(inning1['ball'].iloc[-1])
+    inning2_overs = round_overs(inning2['ball'].iloc[-1])
 
     inning1_label = f"{team1_short_name}: {team1_final_score}/{team1_final_wickets} in {inning1_overs}"
     inning2_label = f"{team2_short_name}: {team2_final_score}/{team2_final_wickets} in {inning2_overs}"
@@ -348,8 +362,8 @@ def get_progression_graph(data):
                     wicket_info = f"""{team1_short_name}: {inning1['cum_runs'].iloc[i]}/{inning1['cum_wickets'].iloc[i]} ({round(inning1['over_ball'].iloc[i],1)})
                     <br>{inning1['player_dismissed'].iloc[i]} {inning1['non_striker_final_score'].iloc[i]} """
             except:
-                wicket_info = "NA"
-                    
+                wicket_info="NA"
+
             fig.add_trace(
                 go.Scatter(
                     x=[inning1['ball_count'].iloc[i]],
@@ -456,7 +470,7 @@ def get_progression_graph(data):
         inning1_death_overs_score =  f"{team1_short_name}: {inning1['cum_runs'].iloc[-1]}/{inning1['cum_wickets'].iloc[-1]}"
 
 
-
+    
     i = 0
 
     # Inning2 Powerplay, Middle Overs, Death Overs Score
@@ -616,23 +630,37 @@ def main():
             margin-bottom: 2rem;
         }
         .stTabs [data-baseweb="tab-list"] {
-            gap: 2rem;
+            gap: 3rem;
         }
+
         .stTabs [data-baseweb="tab"] {
-            height: 40px;
-            
+            height: 50px;
+            padding: 0 20px;
             background-color: #E6E6FA;
-            border-radius: px;
+            border-radius: 5px;
             color: #0e1117;
             font-size: 18px;
+            font-weight: bold;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .stTabs [data-baseweb="tab"]:hover {
+            background-color: #D8BFD8;
+            color: #0e1117;
+        }
+
+        .stTabs [aria-selected="true"] {
+            background-color: #9370DB !important;
+            color: white !important;
         }
         </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<h1 class="streamlit-header">IPL Match Analyzer</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="streamlit-header">IPL Match Analysis Dashboard</h1>', unsafe_allow_html=True)
 
     # Load data
-    all_ipl_data = pd.read_csv('IPL_Data/raw_ipl_data.csv')
+    all_ipl_data = pd.read_csv('IPL_Data\\raw_ipl_data.csv')
 
     # Filters
     col1, col2 = st.columns(2)
@@ -658,7 +686,7 @@ def main():
         matches_list[filter_string] = match_id
 
     with col2:
-        select_match = st.selectbox('Select Match:', list(matches_list.keys()),index=2)
+        select_match = st.selectbox('Select Match:', list(matches_list.keys()))
 
     match_id = matches_list[select_match]
     match_data = all_ipl_data[all_ipl_data['match_id'] == match_id]
@@ -749,3 +777,35 @@ def main():
             
             if 'player_of_match' in match_data.columns:
                 st.write(f"Player of the Match: {match_data['player_of_match'].iloc[0]}")
+
+    st.sidebar.markdown("""
+    <h2>UpComing Features in Match Analyzer:</h2>
+    <div id="blinking-content">
+        <p>• Match Rating</p>
+        <p>• Match Winning Percentage</p>
+    </div>
+    <style>
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        #blinking-content {
+            animation: blink 1s linear infinite;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Add a placeholder for the script
+    script_placeholder = st.sidebar.empty()
+
+    # Wait for 10 seconds
+    time.sleep(10)
+
+    # After 10 seconds, update the content to remove the animation
+    script_placeholder.markdown("""
+        <style>
+            #blinking-content {
+                animation: none;
+                opacity: 1;
+            }
+        </style>
+        """, unsafe_allow_html=True)
