@@ -6,7 +6,7 @@ import requests
 
 def get_matchups_data():
     
-    data = pd.read_csv('IPL_Data\\all_ipl_data.csv')
+    data = pd.read_csv('IPL_Data/all_ipl_data.csv')
 
     # 50s and 100s
 
