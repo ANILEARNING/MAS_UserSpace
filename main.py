@@ -4,13 +4,14 @@ import about
 import account
 import home
 
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# __import__('pysqlite3')
+# import sys
+# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import match_analyzer
 import matchups
 import chatbot
 import resumeAnalyzer
+import consultants
 
 st.set_page_config(
     page_title="Mad About Sports - User Space",
@@ -48,7 +49,7 @@ class MultiApp:
             # Display app navigation
             app = option_menu(
                 menu_title="Mad About Sports - User Space",
-                options=['Home', 'Chat Assistant', 'Resume Analyzer', 'Match Analyzer','Match Ups','About'],
+                options=['Home', 'Chat Assistant', 'Resume Analyzer', 'Match Analyzer','Match Ups','Consultants','About'],
                 default_index=0,
             )
 
@@ -76,6 +77,11 @@ class MultiApp:
                 matchups.main()
             else:
                 st.info("Please log in to access the Match Ups.")
+        elif app == "Consultants":
+            if st.session_state.useremail:
+                consultants.main()
+            else:
+                st.info("Please log in to access the Consultants Page.")
 
         elif app == "About":
             about.app()
