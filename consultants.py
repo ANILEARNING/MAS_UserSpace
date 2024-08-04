@@ -16,11 +16,11 @@ def create_consultant_box(name, photo_path, role, whatsapp_number):
             st.markdown(f"[![Message](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)]({whatsapp_url})")
 
 def main():
-    st.title("Consultants")
+    st.title("Experts")
     
     # Custom CSS for spacing
     st.markdown("""
-    <style>
+    <style> 
     .consultant-box {
         padding: 20px;
         margin-bottom: 20px;
