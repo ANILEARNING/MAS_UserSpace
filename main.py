@@ -49,7 +49,7 @@ class MultiApp:
             # Display app navigation
             app = option_menu(
                 menu_title="Mad About Sports - User Space",
-                options=['Home', 'Chat Assistant', 'Resume Analyzer', 'Match Analyzer','Match Ups','Consultants','About'],
+                options=['Home', 'Chat Assistant', 'Resume Analyzer', 'Match Analyzer','Match Ups','Experts','About'],
                 default_index=0,
             )
 
@@ -77,7 +77,7 @@ class MultiApp:
                 matchups.main()
             else:
                 st.info("Please log in to access the Match Ups.")
-        elif app == "Consultants":
+        elif app == "Experts":
             if st.session_state.useremail:
                 consultants.main()
             else:
