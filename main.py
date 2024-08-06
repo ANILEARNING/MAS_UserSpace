@@ -7,13 +7,18 @@ import home
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-
+import match_analyzer
+import matchups
 import chatbot
 import resumeAnalyzer
+import consultants
 
 st.set_page_config(
-    page_title="Mad About Sports - User Space"
+    page_title="Mad About Sports - User Space",
+    layout="wide"
 )
+
+#
 
 class MultiApp:
     def __init__(self):
@@ -44,27 +49,42 @@ class MultiApp:
             # Display app navigation
             app = option_menu(
                 menu_title="Mad About Sports - User Space",
-                options=['Home', 'Chat Assistant', 'Resume Analyzer', 'About'],
+                options=['Home', 'Match Analyser','Match Ups', 'Profile Analyser','Chat Assistant', 'Experts','About'],
                 default_index=0,
             )
 
         # Run selected app
         if app == "Home":
             home.app()
+        elif app == "Match Analyser":
+            if st.session_state.useremail:
+                match_analyzer.main()
+            else:
+                st.info("Please log in to access the Match Analyzer.")
+        elif app == "Match Ups":
+            if st.session_state.useremail:
+                matchups.main()
+            else:
+                st.info("Please log in to access the Match Ups.")
+        elif app == "Profile Analyser":
+            if st.session_state.useremail:
+                resumeAnalyzer.main()
+            else:
+                st.info("Please log in to access the Resume Analyzer.")
         elif app == "Chat Assistant":
             if st.session_state.useremail:
                 chatbot.main()
             else:
                 st.info("Please log in to access the Chat Assistant.")
-        elif app == "Resume Analyzer":
+       
+        elif app == "Experts":
             if st.session_state.useremail:
-                resumeAnalyzer.main()
+                consultants.main()
             else:
-                st.info("Please log in to access the Resume Analyzer.")
+                st.info("Please log in to access the Consultants Page.")
+
         elif app == "About":
             about.app()
-
-
 
 # Create instance of MultiApp
 multi_app = MultiApp()
