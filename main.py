@@ -84,7 +84,7 @@ class MultiApp:
             else:
                 st.info("Please log in to access the Talk to Experts Page.")
 
-        elif app == " ?":
+        elif app == "Have any Suggestions?":
             suggestions.main()
             
         elif app == "About":
