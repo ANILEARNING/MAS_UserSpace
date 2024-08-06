@@ -12,6 +12,7 @@ import matchups
 import chatbot
 import resumeAnalyzer
 import consultants
+import suggestions
 
 st.set_page_config(
     page_title="Mad About Sports - User Space",
@@ -49,7 +50,7 @@ class MultiApp:
             # Display app navigation
             app = option_menu(
                 menu_title="Mad About Sports - User Space",
-                options=['Home', 'Match Analyser','Match Ups', 'Profile Analyser','Chat Assistant', 'Experts','About'],
+                options=['Home', 'Match Analyser','Match Ups', 'Profile Analyser','Chat Assistant', 'Talk to Experts','About'],
                 default_index=0,
             )
 
@@ -77,12 +78,15 @@ class MultiApp:
             else:
                 st.info("Please log in to access the Chat Assistant.")
        
-        elif app == "Experts":
+        elif app == "Talk to Experts":
             if st.session_state.useremail:
                 consultants.main()
             else:
-                st.info("Please log in to access the Consultants Page.")
+                st.info("Please log in to access the Talk to Experts Page.")
 
+        elif app == "Have any Suggestions?":
+            suggestions.main()
+            
         elif app == "About":
             about.app()
 
