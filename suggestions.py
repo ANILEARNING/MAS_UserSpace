@@ -7,11 +7,30 @@ def open_google_form():
     webbrowser.open_new_tab(form_url)
 
 def main():
-    st.title("Welcome to Our Community Survey! 🌟")
+
+    st.markdown(
+        """
+        <style>
+        .stButton>button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .stButton>button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    st.title(" We value your input! 💖🌟")
 
     st.write("""
-    ### We value your input! 💖
-    
     Your opinions and experiences are incredibly important to us. 
     By sharing your thoughts, you're helping us create a better experience for everyone. 🙌
     
