@@ -49,34 +49,34 @@ class MultiApp:
             # Display app navigation
             app = option_menu(
                 menu_title="Mad About Sports - User Space",
-                options=['Home', 'Chat Assistant', 'Resume Analyzer', 'Match Analyzer','Match Ups','Experts','About'],
+                options=['Home', 'Match Analyser','Match Ups', 'Profile Analyser','Chat Assistant', 'Experts','About'],
                 default_index=0,
             )
 
         # Run selected app
         if app == "Home":
             home.app()
-        elif app == "Chat Assistant":
-            if st.session_state.useremail:
-                chatbot.main()
-            else:
-                st.info("Please log in to access the Chat Assistant.")
-        elif app == "Resume Analyzer":
-            if st.session_state.useremail:
-                resumeAnalyzer.main()
-            else:
-                st.info("Please log in to access the Resume Analyzer.")
-        elif app == "Match Analyzer":
+        elif app == "Match Analyser":
             if st.session_state.useremail:
                 match_analyzer.main()
             else:
                 st.info("Please log in to access the Match Analyzer.")
-
         elif app == "Match Ups":
             if st.session_state.useremail:
                 matchups.main()
             else:
                 st.info("Please log in to access the Match Ups.")
+        elif app == "Profile Analyser":
+            if st.session_state.useremail:
+                resumeAnalyzer.main()
+            else:
+                st.info("Please log in to access the Resume Analyzer.")
+        elif app == "Chat Assistant":
+            if st.session_state.useremail:
+                chatbot.main()
+            else:
+                st.info("Please log in to access the Chat Assistant.")
+       
         elif app == "Experts":
             if st.session_state.useremail:
                 consultants.main()
