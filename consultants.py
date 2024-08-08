@@ -37,7 +37,7 @@ def main():
             "photo": "assets/anish.jpg",
             "role": "Full Stack Data Scientist - Cricket",
             "whatsapp": "919384972461",
-            "bio":"Creator of innovative cricket solutions through data and technology; and one of my work in your hand, explore how my expertise can transform your game."
+            "bio":"Creator of innovative Cricket solutions through data and technology; And one of my work in your hand(MASUserSpace), Explore how my expertise can transform your game."
         },
         {
             "name": "Ankit Gujare",
