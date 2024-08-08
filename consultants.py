@@ -55,7 +55,7 @@ def main():
         },
         {
             "name": "Aniketh Kotamraju",
-            "photo": "assets/radhika.jpg",
+            "photo": "assets/aniketh.jpg",
             "role": "Content Researcher",
             "whatsapp": "917989072868",
             "bio":""
