@@ -1,7 +1,7 @@
 import streamlit as st
 import base64
 
-def create_consultant_box(name, photo_path, role, whatsapp_number):
+def create_consultant_box(name, photo_path, role,bio, whatsapp_number):
     with st.container():
         col1, col2 = st.columns([1, 2])
         
