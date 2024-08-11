@@ -28,7 +28,7 @@ def app():
     st.markdown("""
     Have questions, suggestions, or partnership opportunities? Get in touch with us:
     - **Email**: support@madaboutsports.in
-    - **Phone**: +916289170152
+    - **Phone**: +919147361183 
     - **Address**: 5 Jorabagan Street, Jorabagan, Kolkata - 700006
     """)
 
