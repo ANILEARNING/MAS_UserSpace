@@ -1,3 +1,7 @@
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
 def calculate_win_percentages(data, team_mapping):
     inning1 = data[data['innings'] == 1]
     inning2 = data[data['innings'] == 2]
@@ -8,11 +12,13 @@ def calculate_win_percentages(data, team_mapping):
     team1_short_name = team_mapping[team1]['short']
     team2_short_name = team_mapping[team2]['short']
 
-    t1_outcomes = data[data.batting_team == team1].total_runs.value_counts()
-    t2_outcomes = data[data.batting_team == team2].total_runs.value_counts()
+    # Calculate outcomes based on total_runs_off_ball instead of total_runs
+    t1_outcomes = data[data.batting_team == team1].total_runs_off_ball.value_counts()
+    t2_outcomes = data[data.batting_team == team2].total_runs_off_ball.value_counts()
 
-    t1_outs = data[data.batting_team == team1].isOut.sum()
-    t2_outs = data[data.batting_team == team2].isOut.sum()
+    # Use wicket_fallen instead of isOut
+    t1_outs = data[data.batting_team == team1].wicket_fallen.sum()
+    t2_outs = data[data.batting_team == team2].wicket_fallen.sum()
 
     outcomes = [0, 1, 2, 3, 4, 6, 'w']
 
