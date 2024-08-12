@@ -5,6 +5,7 @@ import streamlit as st
 import plotly.graph_objects as go
 from datetime import datetime
 import decimal
+from win_percent import calculate_win_percentages, plot_win_percentage
 
 team_mapping = {
         "Mumbai Indians": {"short": "MI", "colors": ["#78a5ff", "#133b77"]},  # Brighter shade of blue
@@ -668,7 +669,6 @@ def main():
         seasons = sorted(all_ipl_data['season'].unique())
         selected_season = st.selectbox('Select Season:', seasons, index=len(seasons)-1)
 
-    # Filter matches based on selected season
     season_data = all_ipl_data[all_ipl_data['season'] == selected_season]
     match_ids = list(season_data.match_id.unique())
 
@@ -713,7 +713,13 @@ def main():
         # Display the graph
         st.plotly_chart(progression_graph, use_container_width=True, height=800)
 
-        # Key Stats (you can keep or remove this part based on your preference)
+        # Add the win percentage chart
+        st.subheader("Win Percentage Chart")
+        win_count_ls, tie_count_ls, lose_count_ls, team1, team2, team1_short_name, team2_short_name = calculate_win_percentages(data, team_mapping)
+        win_percentage_chart = plot_win_percentage(win_count_ls, tie_count_ls, lose_count_ls, team1, team2, team1_short_name, team2_short_name, team_mapping)
+        st.plotly_chart(win_percentage_chart, use_container_width=True, height=600)
+
+        # Key Stats
         col1, col2, col3, = st.columns(3)
         with col1:
             st.metric("Total Sixes", data['is_six'].sum())
@@ -722,10 +728,7 @@ def main():
         with col3:
             st.metric("Extras", data['extras'].sum())
         
-        # col1,col2 = st.columns(2)
-        # with col1:
         st.metric("Highest Individual Score", f"{batter['striker_final_runs'].max()} ({batter.loc[batter['striker_final_runs'].idxmax(), 'striker']})")
-        # with col2:
         st.metric("Best Bowling Figures", f"{bowler['bowler_final_wickets'].max()}/{bowler.loc[bowler['bowler_final_wickets'].idxmax(), 'bowler_final_runs_conceded']} ({bowler.loc[bowler['bowler_final_wickets'].idxmax(), 'bowler']})")
 
            
