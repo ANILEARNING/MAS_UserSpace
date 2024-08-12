@@ -1,8 +1,3 @@
-import pandas as pd
-import numpy as np
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-
 def calculate_win_percentages(data, team_mapping):
     inning1 = data[data['innings'] == 1]
     inning2 = data[data['innings'] == 2]
@@ -47,16 +42,11 @@ def calculate_win_percentages(data, team_mapping):
     t1_cum_pb = list(np.cumsum(t1_pb))
     t2_cum_pb = list(np.cumsum(t2_pb))
 
-    win_count = 0
-    tie_count = 0
-    lose_count = 0
-
-    win_count_ls = []
-    tie_count_ls = []
-    lose_count_ls = []
+    win_count_ls, tie_count_ls, lose_count_ls = [], [], []
 
     for i in range(len(data)):
-        for j in range(100):
+        win_count, tie_count, lose_count = 0, 0, 0
+        for _ in range(100):
             if data['innings'].iloc[i] == 1:
                 ing1_prediction = innings_1_runs(data['over_ball'].iloc[i], data['cum_runs'].iloc[i], data['cum_wickets'].iloc[i], t1_cum_pb)
                 target = ing1_prediction
@@ -75,12 +65,16 @@ def calculate_win_percentages(data, team_mapping):
         win_count_ls.append(win_count)
         tie_count_ls.append(tie_count)
         lose_count_ls.append(lose_count)
-        
-        win_count = 0
-        tie_count = 0
-        lose_count = 0
 
-    return win_count_ls, tie_count_ls, lose_count_ls, team1, team2, team1_short_name, team2_short_name
+    return {
+        "win_count_ls": win_count_ls,
+        "tie_count_ls": tie_count_ls,
+        "lose_count_ls": lose_count_ls,
+        "team1": team1,
+        "team2": team2,
+        "team1_short_name": team1_short_name,
+        "team2_short_name": team2_short_name
+    }
 
 def innings_1_runs(curr_overs, curr_score, curr_wickets, t1_cum_pb):
     i1p_0, i1p_1, i1p_2, i1p_3, i1p_4, i1p_6, i1p_w = t1_cum_pb
@@ -97,7 +91,7 @@ def innings_1_runs(curr_overs, curr_score, curr_wickets, t1_cum_pb):
     current_balls = over_number*6 + ball_number 
     leftover_balls = 120 - current_balls
 
-    for i in range(leftover_balls):
+    for _ in range(leftover_balls):
         r_value = np.random.random()
 
         if r_value <= i1p_0:
@@ -135,7 +129,7 @@ def innings_2_runs(curr_overs, curr_score, curr_wickets, target, t2_cum_pb):
     current_balls = over_number*6 + ball_number 
     leftover_balls = 120 - current_balls
 
-    for i in range(leftover_balls):
+    for _ in range(leftover_balls):
         r_value = np.random.random()
 
         if r_value <= i2p_0:
