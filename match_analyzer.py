@@ -714,8 +714,17 @@ def main():
         st.plotly_chart(progression_graph, use_container_width=True, height=800)
 
         # Add the win percentage chart
-        st.subheader("Win Percentage Chart")
-        win_count_ls, tie_count_ls, lose_count_ls, team1, team2, team1_short_name, team2_short_name = calculate_win_percentages(data, team_mapping)
+        # Update the win percentage calculation
+        win_percentage_result = calculate_win_percentages(data, team_mapping)
+        
+        win_count_ls = win_percentage_result["win_count_ls"]
+        tie_count_ls = win_percentage_result["tie_count_ls"]
+        lose_count_ls = win_percentage_result["lose_count_ls"]
+        team1 = win_percentage_result["team1"]
+        team2 = win_percentage_result["team2"]
+        team1_short_name = win_percentage_result["team1_short_name"]
+        team2_short_name = win_percentage_result["team2_short_name"]
+        
         win_percentage_chart = plot_win_percentage(win_count_ls, tie_count_ls, lose_count_ls, team1, team2, team1_short_name, team2_short_name, team_mapping)
         st.plotly_chart(win_percentage_chart, use_container_width=True, height=600)
 
