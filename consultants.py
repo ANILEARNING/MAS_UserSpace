@@ -51,14 +51,14 @@ def main():
             "photo": "assets/radhika.jpg",
             "role": "Injury Prevention and Rehabilitation",
             "whatsapp": "919752622331",
-            "bio": ""
+            "bio": "Biomechanics and injury prevention, I can help you in crafting fitness routines . My background in strength and conditioning, sports nutrition, and injury rehabilitation equips me to optimize athletic performance and well-being"
         },
         {
             "name": "Aniketh Kotamraju",
             "photo": "assets/aniketh.jpg",
             "role": "Content Researcher",
             "whatsapp": "917989072868",
-            "bio":""
+            "bio":"I am passionate about cricket and on a mission to build a userspace for cricket with a knack for cricket data, stats and I can guide aspiring cricketers on their career paths"
         }
         
         # Add more consultants here if needed
