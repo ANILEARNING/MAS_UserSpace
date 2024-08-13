@@ -735,13 +735,30 @@ def innings_2_runs(curr_overs, curr_score, curr_wickets, target, t2_cum_pb):
     pred_runs = curr_score
     pred_wks = curr_wickets
     
-    over_ball = curr_overs
-    over_number = int(str(over_ball).split('.')[0])
-    ball_number = int(str(over_ball).split('.')[1])
+    # over_ball = curr_overs
+    # over_number = int(str(over_ball).split('.')[0])
+    # ball_number = int(str(over_ball).split('.')[1])
     
+    # if ball_number >= 6:
+    #     ball_number = 6
+    # current_balls = over_number*6 + ball_number 
+    # leftover_balls = 120 - current_balls
+
+    # calculate leftover balls
+    over_ball = curr_overs
+    over_parts = str(over_ball).split('.')
+    over_number = int(over_parts[0])
+    
+    if len(over_parts) > 1:
+        ball_number = int(over_parts[1])
+    else:
+        ball_number = 0
+
     if ball_number >= 6:
-        ball_number = 6
-    current_balls = over_number*6 + ball_number 
+        ball_number = 0
+        over_number += 1
+    
+    current_balls = over_number * 6 + ball_number 
     leftover_balls = 120 - current_balls
 
     for _ in range(leftover_balls):
