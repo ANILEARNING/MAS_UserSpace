@@ -1,7 +1,7 @@
 import streamlit as st
 import base64
 
-def create_consultant_box(name, photo_path, role, whatsapp_number):
+def create_consultant_box(name, photo_path, role,bio, whatsapp_number):
     with st.container():
         col1, col2 = st.columns([1, 2])
         
@@ -11,6 +11,7 @@ def create_consultant_box(name, photo_path, role, whatsapp_number):
         with col2:
             st.subheader(name)
             st.write(role)
+            st.write(bio)
             
             whatsapp_url = f"https://wa.me/{whatsapp_number}"
             st.markdown(f"[![Message](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)]({whatsapp_url})")
@@ -35,20 +36,31 @@ def main():
             "name": "Anish S",
             "photo": "assets/anish.jpg",
             "role": "Full Stack Data Scientist - Cricket",
-            "whatsapp": "919384972461"
+            "whatsapp": "919384972461",
+            "bio":"Creator of innovative Cricket solutions through data and technology; And one of my work in your hand(MASUserSpace), Explore how my expertise can transform your game."
         },
         {
             "name": "Ankit Gujare",
             "photo": "assets/ankit.jpg",
             "role": "Cricket Social Media Expert",
-            "whatsapp": "919967868733"
+            "whatsapp": "919967868733",
+            "bio":"I can help you grow your Cricket Page/Channel"
         },
         {
             "name": "Radhika patle",
             "photo": "assets/radhika.jpg",
             "role": "Injury Prevention and Rehabilitation",
-            "whatsapp": "919752622331"
+            "whatsapp": "919752622331",
+            "bio": "Biomechanics and injury prevention, I can help you in crafting fitness routines . My background in strength and conditioning, sports nutrition, and injury rehabilitation equips me to optimize athletic performance and well-being"
         },
+        {
+            "name": "Aniketh Kotamraju",
+            "photo": "assets/aniketh.jpg",
+            "role": "Content Researcher",
+            "whatsapp": "917989072868",
+            "bio":"I am passionate about cricket and on a mission to build a userspace for cricket with a knack for cricket data, stats and I can guide aspiring cricketers on their career paths"
+        }
+        
         # Add more consultants here if needed
     ]
 
@@ -59,6 +71,7 @@ def main():
                 consultant["name"],
                 consultant["photo"],
                 consultant["role"],
+                consultant["bio"],
                 consultant["whatsapp"]
             )
             st.markdown('</div>', unsafe_allow_html=True)
