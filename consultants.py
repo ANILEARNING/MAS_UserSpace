@@ -35,7 +35,7 @@ def main():
         {
             "name": "Anish S",
             "photo": "assets/anish.jpg",
-            "role": "Full Stack Data Scientist - Cricket",
+            "role": "Data Scientist - Cricket",
             "whatsapp": "919384972461",
             "bio":"Creator of innovative Cricket solutions through data and technology; And one of my work in your hand(MASUserSpace), Explore how my expertise can transform your game."
         },
