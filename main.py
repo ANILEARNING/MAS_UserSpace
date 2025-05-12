@@ -9,7 +9,7 @@ import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import match_analyzer
 import matchups
-# import chatbot
+import chatbot
 import resumeAnalyzer
 import consultants
 import suggestions
@@ -72,11 +72,11 @@ class MultiApp:
                 resumeAnalyzer.main()
             else:
                 st.info("Please log in to access the Resume Analyzer.")
-        # elif app == "Chat Assistant":
-        #     if st.session_state.useremail:
-        #         chatbot.main()
-        #     else:
-        #         st.info("Please log in to access the Chat Assistant.")
+        elif app == "Chat Assistant":
+            if st.session_state.useremail:
+                chatbot.main()
+            else:
+                st.info("Please log in to access the Chat Assistant.")
        
         elif app == "Talk to Experts":
             if st.session_state.useremail:
