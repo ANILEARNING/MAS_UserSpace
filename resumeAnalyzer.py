@@ -13,7 +13,7 @@ import json
 key = st.secrets["API_KEY"]
 
 genai.configure(api_key=key)
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('models/gemini-1.5-flash')
 
 project_and_curriculum = {
   "school": {
